@@ -70,10 +70,10 @@ def isonboard(x,y):
 
 def flip_pawn(board,player,x0,y0):
     flip = []
-    if player == 'player1':
+    if player == 'black':
         pawn = 1
         other = 2
-    elif player == 'player2':
+    elif player == 'white':
         pawn = 2
         other = 1
     direction = [[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]]
@@ -127,7 +127,7 @@ def gameover(board,info):
     if not info:
         return True
     game = 0
-    for p in ['player1','player2']:
+    for p in ['black','white']:
         if not check_is_any_legal_move(board,info,p):
             game += 1
     if game == 2:

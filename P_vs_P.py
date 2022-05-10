@@ -24,7 +24,7 @@ def pvsp():
     flag_gameover = [1,1]
 
     gameover = False
-    turn = 'player1'
+    turn = 'black'
 
     running = True
     while running:
@@ -57,13 +57,13 @@ def pvsp():
 
             if not gameover:
                 #show whose turn
-                if turn == 'player1':
+                if turn == 'black':
                     main.surface.blit(main.gamepawn_black,(385,60))
-                elif turn == 'player2':
+                elif turn == 'white':
                     main.surface.blit(main.gamepawn_white,(385,60))
 
                 #for black
-                if turn == 'player1' and \
+                if turn == 'black' and \
                         event.type == pygame.MOUSEBUTTONDOWN and \
                         event.button == 1 and \
                         not gameover:
@@ -71,15 +71,15 @@ def pvsp():
                     for [x,y] in info:
                         if pos[0] in range(375+x*80, 375+x*80+80) and \
                                 pos[1] in range(50+y*80, 50+y*80+80):
-                            if main.legal_move(board,'player1',x,y):
+                            if main.legal_move(board,'black',x,y):
                                 board[x][y] = 1
                                 info.remove([x,y])
-                                for i, j in main.flip_pawn(board,'player1',x,y):
+                                for i, j in main.flip_pawn(board,'black',x,y):
                                     board[i][j] = 1
-                                turn = 'player2'
+                                turn = 'white'
                                 break
                 #for white
-                elif turn == 'player2' and \
+                elif turn == 'white' and \
                         event.type == pygame.MOUSEBUTTONDOWN and \
                         event.button == 1 and \
                         not gameover:
@@ -87,21 +87,21 @@ def pvsp():
                     for [x,y] in info:
                         if pos[0] in range(375+x*80, 375+x*80+80) and \
                                 pos[1] in range(50+y*80, 50+y*80+80):
-                            if main.legal_move(board,'player2',x,y):
+                            if main.legal_move(board,'white',x,y):
                                 board[x][y] = 2
                                 info.remove([x,y])
-                                for i, j in main.flip_pawn(board,'player2',x,y):
+                                for i, j in main.flip_pawn(board,'white',x,y):
                                     board[i][j] = 2
-                                turn = 'player1'
+                                turn = 'black'
                                 break
 
                 #check is there any legal move for both player
-                if turn == 'player1':
-                    if not main.check_is_any_legal_move(board,info,'player1'):
-                        turn = 'player2'
-                elif turn == 'player2':
-                    if not main.check_is_any_legal_move(board,info,'player2'):
-                        turn = 'player1'
+                if turn == 'black':
+                    if not main.check_is_any_legal_move(board,info,'black'):
+                        turn = 'white'
+                elif turn == 'white':
+                    if not main.check_is_any_legal_move(board,info,'white'):
+                        turn = 'black'
 
 
             else:

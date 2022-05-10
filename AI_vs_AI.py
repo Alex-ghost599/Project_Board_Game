@@ -28,7 +28,7 @@ def aivsai(player1,player2):
     flag_u = False
 
     gameover = False
-    turn = 'player1'
+    turn = 'black'
 
     running = True
     while running:
@@ -63,65 +63,78 @@ def aivsai(player1,player2):
 
         if not gameover:
             #show whose turn
-            if turn == 'player1':
+            if turn == 'black':
                 main.surface.blit(main.gamepawn_black,(385,60))
-            elif turn == 'player2':
+            elif turn == 'white':
                 main.surface.blit(main.gamepawn_white,(385,60))
 
             #for black:
-            if turn == 'player1':
+            if turn == 'black':
                 if player1 == 1:
-                    x,y = AI.Random.move_random(board,'player1',info)
+                    x,y = AI.Random.move_random(board,'black',info)
                     if [x,y] != [None,None]:
                         board[x][y] = 1
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'player1',x,y):
+                        for i,j in main.flip_pawn(board,'black',x,y):
                             board[i][j] = 1
-                        turn = 'player2'
+                        turn = 'white'
 
                 elif player1 == 2:
-                    x,y = AI.Evaluate.move_eva(board,'player1',info)
+                    x,y = AI.Evaluate.move_eva(board,'black',info)
                     if [x,y] != [None,None]:
                         board[x][y]=1
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'player1',x,y):
+                        for i,j in main.flip_pawn(board,'black',x,y):
                             board[i][j]=1
-                        turn='player2'
+                        turn='white'
 
                 elif player1 == 3:
-                    pass
+                    x,y=AI.Score.move_score(board,'black',info)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,'black',x,y):
+                            board[i][j]=1
+                        turn='white'
+
 
 
             #for white
-            elif turn == 'player2':
+            elif turn == 'white':
                 if player2 == 1:
-                    x,y = AI.Random.move_random(board,'player2',info)
+                    x,y = AI.Random.move_random(board,'white',info)
                     if [x,y] != [None,None]:
                         board[x][y] = 2
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'player2',x,y):
+                        for i,j in main.flip_pawn(board,'white',x,y):
                             board[i][j] = 2
-                        turn = 'player1'
+                        turn = 'black'
 
                 elif player2 == 2:
-                    x,y = AI.Evaluate.move_eva(board,'player2',info)
+                    x,y = AI.Evaluate.move_eva(board,'white',info)
                     if [x,y] != [None,None]:
                         board[x][y] = 2
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'player2',x,y):
+                        for i,j in main.flip_pawn(board,'white',x,y):
                             board[i][j] = 2
-                        turn='player1'
+                        turn='black'
 
                 elif player2 == 3:
-                    pass
+                    x,y=AI.Score.move_score(board,'white',info)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,'white',x,y):
+                            board[i][j]=2
+                        turn='black'
 
             #check is there any legal move for both player
-            if turn == 'player1':
-                if not main.check_is_any_legal_move(board,info,'player1'):
-                    turn = 'player2'
-            elif turn == 'player2':
-                if not main.check_is_any_legal_move(board,info,'player2'):
-                    turn = 'player1'
+            if turn == 'black':
+                if not main.check_is_any_legal_move(board,info,'black'):
+                    turn = 'white'
+            elif turn == 'white':
+                if not main.check_is_any_legal_move(board,info,'white'):
+                    turn = 'black'
 
         else:
             main.show_score(main.socreboard,board)
