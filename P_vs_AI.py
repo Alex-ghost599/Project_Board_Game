@@ -96,7 +96,7 @@ def pvsai(player1,player2):
                 elif turn == 'player1' and\
                         not human:
                     if player1 == 1:
-                        x,y = rm.move(board,'player1',info)
+                        x,y = rm.move_random(board,'player1',info)
                         if [x,y] != [None,None]:
                             board[x][y] = 1
                             info.remove([x,y])
@@ -139,7 +139,7 @@ def pvsai(player1,player2):
                         not gameover and\
                         human:
                     if player2 == 1:
-                        x,y = rm.move(board,'player2',info)
+                        x,y = rm.move_random(board,'player2',info)
                         if [x,y] != [None,None]:
                             board[x][y] = 2
                             info.remove([x,y])

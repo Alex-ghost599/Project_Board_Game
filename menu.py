@@ -86,7 +86,7 @@ def main_menu():
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
-    ).translate(100,200)
+    ).translate(-110,0)
 
     menu.add.label(
         'Player 2 (White):',
@@ -115,7 +115,7 @@ def main_menu():
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
-    )
+    ).translate(110,0)
 
     def start_game() -> None:
         player1=menu.get_widget(widget_id='Player_1').get_value()[1]

@@ -71,7 +71,7 @@ def aivsai(player1,player2):
             #for black:
             if turn == 'player1':
                 if player1 == 1:
-                    x,y = AI.Random.move(board,'player1',info)
+                    x,y = AI.Random.move_random(board,'player1',info)
                     if [x,y] != [None,None]:
                         board[x][y] = 1
                         info.remove([x,y])
@@ -95,7 +95,7 @@ def aivsai(player1,player2):
             #for white
             elif turn == 'player2':
                 if player2 == 1:
-                    x,y = AI.Random.move(board,'player2',info)
+                    x,y = AI.Random.move_random(board,'player2',info)
                     if [x,y] != [None,None]:
                         board[x][y] = 2
                         info.remove([x,y])

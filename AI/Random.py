@@ -11,7 +11,7 @@ def get_possible_moves(board, player,info):
             possible_moves.append((x,y))
     return possible_moves
 
-def move(board, player, info):
+def move_random(board, player, info):
     possible_moves = get_possible_moves(board, player,info)
     conner = [(1,1),(1,8),(8,1),(8,8)]
     set_p = set(conner) & set(possible_moves)
