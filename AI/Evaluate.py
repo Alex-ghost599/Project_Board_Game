@@ -28,7 +28,7 @@ for x,y in ((2,2),(2,3),(2,4),(2,5),(3,2),(4,2),(5,2),(5,3),(5,4),(3,5),(4,5),(5
 
 def move_eva(board,player,info):
     possible_moves = get_possible_moves(board,player,info)
-    # random.shuffle(possible_moves)
+    random.shuffle(possible_moves)
     result0 = 0
     move = [None,None]
     if len(possible_moves) != 0:

@@ -13,8 +13,9 @@ def get_possible_moves(board, player,info):
 
 def move_score(board,player,info):
     possible_moves = get_possible_moves(board,player,info)
+    random.shuffle(possible_moves)
     conner = [(1,1),(1,8),(8,1),(8,8)]
-    set_p = set(conner)&set(possible_moves)
+    set_p = set(conner) & set(possible_moves)
     if set_p:
         return random.choice(list(set_p))
     tem_board = board.copy()
