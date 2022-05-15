@@ -65,7 +65,7 @@ def main_menu():
         font_size=26,
         margin=(0,5),
         float=True,
-    ).translate(-412,200,)
+    ).translate(-412,200)
     menu.add.dropselect(
         title='',
         items=[('Human player',0),
@@ -86,7 +86,7 @@ def main_menu():
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
-    ).translate(-110,0)
+    ).translate(-412,300)
 
     menu.add.label(
         'Player 2 (White):',
@@ -94,7 +94,7 @@ def main_menu():
         font_size=26,
         margin=(0,5),
         float=True,
-    ).translate(-412,400,)
+    ).translate(-412,400)
     menu.add.dropselect(
         title='',
         items=[('Human player',0),
@@ -115,7 +115,7 @@ def main_menu():
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
-    ).translate(110,0)
+    ).translate(-412,500)
 
     def start_game() -> None:
         player1=menu.get_widget(widget_id='Player_1').get_value()[1]

@@ -6,10 +6,12 @@
 import pygame
 import sys
 import time
+import random
 import numpy as np
 # import P_vs_P
 # import P_vs_AI
 # import AI_vs_AI
+
 
 import menu
 
@@ -112,6 +114,14 @@ def check_is_any_legal_move(board,info,player):
             return True
     return False
 
+def get_possible_moves(board, player,info):
+    possible_moves = []
+    for [x,y] in info:
+        if legal_move(board,player,x,y):
+            possible_moves.append((x,y))
+    random.shuffle(possible_moves)
+    return possible_moves
+
 def score(board):
     black = 0
     white = 0
@@ -132,7 +142,6 @@ def gameover(board,info):
             game += 1
     if game == 2:
         return True
-
 
 
 def show_score(scoreborad,board):
