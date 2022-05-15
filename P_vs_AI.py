@@ -9,7 +9,8 @@ import sys
 # sys.path.append('/AI/')
 import AI.Random as rm
 import AI.Evaluate
-import AI.Score
+import AI.Score_max
+import AI.Score_min
 
 
 
@@ -115,7 +116,16 @@ def pvsai(player1,player2):
                             turn='white'
                             break
                     elif player1 == 3:
-                        x,y=AI.Score.move_score(board,'black',info)
+                        x,y=AI.Score_max.move_score(board,'black',info)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,'black',x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player1 == 4:
+                        x,y=AI.Score_min.move_score(board,'black',info)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
                             info.remove([x,y])
@@ -165,7 +175,16 @@ def pvsai(player1,player2):
                             turn='black'
                             break
                     elif player2 == 3:
-                        x,y=AI.Score.move_score(board,'white',info)
+                        x,y=AI.Score_max.move_score(board,'white',info)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,'white',x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2 == 4:
+                        x,y=AI.Score_min.move_score(board,'white',info)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])
