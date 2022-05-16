@@ -11,6 +11,7 @@ import AI.Random as rm
 import AI.Evaluate
 import AI.Score_max
 import AI.Score_min
+import AI.MiniMax
 
 
 
@@ -85,8 +86,8 @@ def pvsai(player1,player2):
                         human:
                     pos = event.pos
                     for [x,y] in info:
-                        if pos[0] in range(375+x*80,375+x*80+80) and\
-                                pos[1] in range(50+y*80,50+y*80+80):
+                        if pos[0] in range(375+y*80,375+y*80+80) and\
+                                pos[1] in range(50+x*80,50+x*80+80):
                             if main.legal_move(board,'black',x,y):
                                 board[x][y]=1
                                 info.remove([x,y])
@@ -133,6 +134,15 @@ def pvsai(player1,player2):
                                 board[i][j]=1
                             turn='white'
                             break
+                    elif player1==5:
+                        x,y=AI.MiniMax.move_minimax(board,3,'black',info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,'black',x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
 
 
                 #for white
@@ -143,8 +153,8 @@ def pvsai(player1,player2):
                         not human:
                     pos=event.pos
                     for [x,y] in info:
-                        if pos[0] in range(375+x*80,375+x*80+80) and\
-                                pos[1] in range(50+y*80,50+y*80+80):
+                        if pos[0] in range(375+y*80,375+y*80+80) and\
+                                pos[1] in range(50+x*80,50+x*80+80):
                             if main.legal_move(board,'white',x,y):
                                 board[x][y]=2
                                 info.remove([x,y])
@@ -192,6 +202,16 @@ def pvsai(player1,player2):
                                 board[i][j]=2
                             turn='black'
                             break
+                    elif player2==5:
+                        x,y=AI.MiniMax.move_minimax(board,3,'white',info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,'white',x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+
 
                 #check is there any legal move for both player
                 if turn == 'black':
@@ -209,14 +229,14 @@ def pvsai(player1,player2):
             # update board
             for x in range(1,9):
                 for y in range(1,9):
-                    if board[x][y] == 1:
+                    if board[x][y]==1:
                         main.surface.blit(main.gamepawn_black,
-                                          (x*main.cell_size[0]+main.space_size[0]+375,
-                                           y*main.cell_size[1]+main.space_size[1]+50))
-                    elif board[x][y] == 2:
+                                          (y*main.cell_size[0]+main.space_size[0]+375,
+                                           x*main.cell_size[1]+main.space_size[1]+50))
+                    elif board[x][y]==2:
                         main.surface.blit(main.gamepawn_white,
-                                          (x*main.cell_size[0]+main.space_size[0]+375,
-                                           y*main.cell_size[1]+main.space_size[1]+50))
+                                          (y*main.cell_size[0]+main.space_size[0]+375,
+                                           x*main.cell_size[1]+main.space_size[1]+50))
 
         pygame.display.update()
         main.Runingclock.tick(main.fps)

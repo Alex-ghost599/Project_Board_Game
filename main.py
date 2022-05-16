@@ -143,7 +143,6 @@ def gameover(board,info):
     if game == 2:
         return True
 
-
 def show_score(scoreborad,board):
     surface.blit(scoreborad,(375,350))
     # scoreborad_rect = scoreborad.get_rect()
@@ -159,6 +158,7 @@ def show_score(scoreborad,board):
 
     pygame.display.update()
     Runingclock.tick(fps)
+
 
 
 def main():

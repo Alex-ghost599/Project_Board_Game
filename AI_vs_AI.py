@@ -11,6 +11,7 @@ import AI.Random
 import AI.Evaluate
 import AI.Score_max
 import AI.Score_min
+import AI.MiniMax
 
 
 
@@ -29,7 +30,7 @@ def aivsai(player1,player2):
     flag_d = False
     flag_u = False
 
-    gameover = False
+    # gameover = False
     turn = 'black'
 
     running = True
@@ -57,6 +58,14 @@ def aivsai(player1,player2):
             if event.type==pygame.MOUSEBUTTONDOWN and flag_d:
                 # menu.main_menu()
                 return
+        #show whose turn
+        if turn=='black':
+            main.surface.blit(main.gamepawn_black,(385,60))
+        elif turn=='white':
+            main.surface.blit(main.gamepawn_white,(385,60))
+
+        pygame.display.update()
+        main.Runingclock.tick(main.fps)
 
 
 
@@ -64,47 +73,51 @@ def aivsai(player1,player2):
         gameover = main.gameover(board,info)
 
         if not gameover:
-            #show whose turn
-            if turn == 'black':
-                main.surface.blit(main.gamepawn_black,(385,60))
-            elif turn == 'white':
-                main.surface.blit(main.gamepawn_white,(385,60))
 
             #for black:
             if turn == 'black':
                 if player1 == 1:
-                    x,y = AI.Random.move_random(board,'black',info)
+                    x,y = AI.Random.move_random(board,turn,info)
                     if [x,y] != [None,None]:
                         board[x][y] = 1
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'black',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j] = 1
                         turn = 'white'
 
                 elif player1 == 2:
-                    x,y = AI.Evaluate.move_eva(board,'black',info)
+                    x,y = AI.Evaluate.move_eva(board,turn,info)
                     if [x,y] != [None,None]:
                         board[x][y]=1
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'black',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=1
                         turn='white'
 
                 elif player1 == 3:
-                    x,y=AI.Score_max.move_score(board,'black',info)
+                    x,y=AI.Score_max.move_score(board,turn,info)
                     if [x,y]!=[None,None]:
                         board[x][y]=1
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'black',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=1
                         turn='white'
 
                 elif player1 == 4:
-                    x,y=AI.Score_min.move_score(board,'black',info)
+                    x,y=AI.Score_min.move_score(board,turn,info)
                     if [x,y]!=[None,None]:
                         board[x][y]=1
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'black',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+
+                elif player1 == 5:
+                    x,y=AI.MiniMax.move_minimax(board,4,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=1
                         turn='white'
 
@@ -113,38 +126,47 @@ def aivsai(player1,player2):
             #for white
             elif turn == 'white':
                 if player2 == 1:
-                    x,y = AI.Random.move_random(board,'white',info)
+                    x,y = AI.Random.move_random(board,turn,info)
                     if [x,y] != [None,None]:
                         board[x][y] = 2
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'white',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j] = 2
                         turn = 'black'
 
                 elif player2 == 2:
-                    x,y = AI.Evaluate.move_eva(board,'white',info)
+                    x,y = AI.Evaluate.move_eva(board,turn,info)
                     if [x,y] != [None,None]:
                         board[x][y] = 2
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'white',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j] = 2
                         turn='black'
 
                 elif player2 == 3:
-                    x,y=AI.Score_max.move_score(board,'white',info)
+                    x,y=AI.Score_max.move_score(board,turn,info)
                     if [x,y]!=[None,None]:
                         board[x][y]=2
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'white',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=2
                         turn='black'
 
                 elif player2 == 4:
-                    x,y=AI.Score_min.move_score(board,'white',info)
+                    x,y=AI.Score_min.move_score(board,turn,info)
                     if [x,y]!=[None,None]:
                         board[x][y]=2
                         info.remove([x,y])
-                        for i,j in main.flip_pawn(board,'white',x,y):
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+
+                elif player2 == 5:
+                    x,y=AI.MiniMax.move_minimax(board,4,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=2
                         turn='black'
 
@@ -166,13 +188,14 @@ def aivsai(player1,player2):
                 for y in range(1,9):
                     if board[x][y] == 1:
                         main.surface.blit(main.gamepawn_black,
-                                          (x*main.cell_size[0]+main.space_size[0]+375,
-                                           y*main.cell_size[1]+main.space_size[1]+50))
+                                          (y*main.cell_size[0]+main.space_size[0]+375,
+                                           x*main.cell_size[1]+main.space_size[1]+50))
                     elif board[x][y] == 2:
                         main.surface.blit(main.gamepawn_white,
-                                          (x*main.cell_size[0]+main.space_size[0]+375,
-                                           y*main.cell_size[1]+main.space_size[1]+50))
-            # time.sleep(1.5)
+                                          (y*main.cell_size[0]+main.space_size[0]+375,
+                                           x*main.cell_size[1]+main.space_size[1]+50))
+
 
         pygame.display.update()
         main.Runingclock.tick(main.fps)
+        # print('--------')

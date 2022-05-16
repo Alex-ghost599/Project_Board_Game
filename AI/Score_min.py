@@ -12,7 +12,7 @@ def move_score(board,player,info):
     if set_p:
         return random.choice(list(set_p))
     tem_board = board.copy()
-    score_0 = -1
+    score_0 = 999
     move = []
     for [x,y] in possible_moves:
         if player == 'black':
@@ -26,18 +26,18 @@ def move_score(board,player,info):
             elif score_0 == tem_score[0]:
                 move = random.choice([[x,y],[move[0],move[1]]])
             elif score_0 < tem_score[0]:
-                pass
+                move = move
 
         elif player == 'white':
             tem_board[x][y] = 2
             for i,j in main.flip_pawn(board,'white',x,y):
                 tem_board[i][j] = 2
             tem_score = main.score(tem_board)
-            if score_0 < tem_score[1]:
+            if score_0 > tem_score[1]:
                 score_0 = tem_score[1]
                 move = [x,y]
             elif score_0 == tem_score[1]:
                 move = random.choice([[x,y],[move[0],move[1]]])
-            elif score_0 > tem_score[1]:
-                pass
+            elif score_0 < tem_score[1]:
+                move = move
     return move
