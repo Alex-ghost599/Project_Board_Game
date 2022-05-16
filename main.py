@@ -23,6 +23,9 @@ cell_size = (80,80)
 pawn_size = (70,70)
 space_size = (5,5)
 fps = 60
+number_of_win_black = 0
+number_of_win_white = 0
+Draw = 0
 # load image
 
 gameboard_origin = pygame.image.load("picture/board.png")
@@ -45,6 +48,26 @@ white.fill((255,255,255))
 
 socreboard = pygame.Surface((800,200))
 socreboard.fill((130, 134, 136))
+
+winnerboard_b = pygame.Surface((50,50))
+winnerboard_b.fill((255,255,255))
+
+winnerboard_w = pygame.Surface((50,50))
+winnerboard_w.fill((255,255,255))
+
+winnerboard_d = pygame.Surface((50,50))
+winnerboard_d.fill((255,255,255))
+
+font_stop = pygame.font.SysFont('arial',30)
+font_resume = pygame.font.SysFont('arial',20)
+
+stopbutton = pygame.Surface((80,80))
+stopbutton.fill((52, 64, 235))
+text_stop = font_stop.render("STOP",True,(0,0,0))
+
+resumebutton = pygame.Surface((80,80))
+resumebutton.fill((52, 235, 119))
+text_resume = font_resume.render("RESUME",True,(0,0,0))
 
 surface.blit(white,(375,50))
 pygame.display.set_caption("Othello_lyz")
@@ -143,11 +166,12 @@ def gameover(board,info):
     if game == 2:
         return True
 
-def show_score(scoreborad,board):
-    surface.blit(scoreborad,(375,350))
-    # scoreborad_rect = scoreborad.get_rect()
+def show_score(scoreboard,board):
+    surface.blit(scoreboard,(375,350))
+    # scoreboard_rect = scoreboard.get_rect()
 
     black,white = score(board)
+
     font = pygame.font.SysFont('arial',50)
 
     text1 = font.render("GAMEOVER",True,(0,0,0))
@@ -155,6 +179,34 @@ def show_score(scoreborad,board):
 
     surface.blit(text1,(675,350))
     surface.blit(text2,(625,450))
+
+    pygame.display.update()
+    Runingclock.tick(fps)
+
+def Scoreboard(number_of_win_black,
+               number_of_win_white,
+               Draw):
+    black_rect=surface.blit(winnerboard_b,(50,600))
+    draw_rect=surface.blit(winnerboard_d,(170,600))
+    white_rect=surface.blit(winnerboard_w,(290,600))
+
+    font=pygame.font.SysFont('arial',50)
+
+    text_black=font.render(str(number_of_win_black),True,(0,0,0))
+    text_black_rect=text_black.get_rect()
+    text_black_rect.center=black_rect.center
+
+    text_white=font.render(str(number_of_win_white),True,(0,0,0))
+    text_white_rect=text_white.get_rect()
+    text_white_rect.center=white_rect.center
+
+    text_draw=font.render(str(Draw),True,(0,0,0))
+    text_draw_rect=text_draw.get_rect()
+    text_draw_rect.center=draw_rect.center
+
+    surface.blit(text_black,(text_black_rect))
+    surface.blit(text_white,(text_white_rect))
+    surface.blit(text_draw,(text_draw_rect))
 
     pygame.display.update()
     Runingclock.tick(fps)
@@ -171,6 +223,7 @@ def main():
 
 
         menu.main_menu()
+
 
 # running---------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':

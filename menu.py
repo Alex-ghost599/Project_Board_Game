@@ -65,7 +65,7 @@ def main_menu():
         font_size=26,
         margin=(0,5),
         float=True,
-    ).translate(-412,200)
+    ).translate(-412,50)
     menu.add.dropselect(
         title='',
         items=[('Human player',0),
@@ -88,7 +88,7 @@ def main_menu():
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
-    ).translate(-412,300)
+    ).translate(-412,100)
 
     menu.add.label(
         'Player 2 (White):',
@@ -96,7 +96,7 @@ def main_menu():
         font_size=26,
         margin=(0,5),
         float=True,
-    ).translate(-412,400)
+    ).translate(-412,150)
     menu.add.dropselect(
         title='',
         items=[('Human player',0),
@@ -119,11 +119,91 @@ def main_menu():
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
+    ).translate(-412,200)
+
+    menu.add.label(
+        'Number of Rounds',
+        font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
+        font_size=24,
+        margin=(0,5),
+        float=True,
+    ).translate(-412,310)
+    menu.add.label(
+        '(0 for Manually):',
+        font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
+        font_size=24,
+        margin=(0,5),
+        float=True,
+    ).translate(-412,340)
+
+    menu.add.range_slider('',0,(0,100),1,
+                          rangeslider_id='range_slider',
+                          float=True,
+                          height=20,
+                          width=300,
+                          font_size=36,
+                          padding=0,
+                          value_format=lambda x: str(int(x))).translate(-412,400)
+
+    menu.add.label(
+        'Scoreboard',
+        font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
+        font_size=24,
+        margin=(0,5),
+        float=True,
     ).translate(-412,500)
+
+    menu.add.label(
+        'Black',
+        font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
+        font_size=22,
+        margin=(0,5),
+        float=True,
+    ).translate(-525,550)
+
+    menu.add.label(
+        'Draw',
+        font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
+        font_size=22,
+        margin=(0,5),
+        float=True,
+    ).translate(-405,550)
+
+    menu.add.label(
+        'White',
+        font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
+        font_size=22,
+        margin=(0,5),
+        float=True,
+    ).translate(-285,550)
+
+    menu.add.label(
+        '',
+        background_color='#FFFFFF',
+        background_inflate=(40,10),
+        float=True
+    ).translate(-525,600)
+
+    menu.add.label(
+        '',
+        background_color='#FFFFFF',
+        background_inflate=(40,10),
+        float=True
+    ).translate(-405,600)
+
+    menu.add.label(
+        '',
+        background_color='#FFFFFF',
+        background_inflate=(40,10),
+        float=True
+    ).translate(-285,600)
+
 
     def start_game() -> None:
         player1=menu.get_widget(widget_id='Player_1').get_value()[1]
         player2=menu.get_widget(widget_id='Player_2').get_value()[1]
+        number_of_rounds=round(menu.get_widget(widget_id='range_slider').get_value())
+        # print(player1,player2,number_of_rounds)
         if player1 == player2 == 0:
             P_vs_P.pvsp()
         elif player1 == 0 and player2 != 0:
@@ -133,7 +213,7 @@ def main_menu():
             pai.pvsai(player1,player2)
 
         elif player1 != 0 and player2 != 0:
-            aiai.aivsai(player1,player2)
+            aiai.aivsai(player1,player2,number_of_rounds)
 
 
 

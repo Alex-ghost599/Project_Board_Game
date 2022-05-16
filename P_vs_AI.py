@@ -16,7 +16,7 @@ import AI.MiniMax
 
 
 def pvsai(player1,player2):
-
+    #set human player
     human = True
     if player1 == 0:
         human = True
@@ -27,6 +27,12 @@ def pvsai(player1,player2):
     # background
     main.surface.blit(main.gameboard,(375,50))
 
+    #stop button
+    stop_rect=main.surface.blit(main.stopbutton,(375,770))
+    text_stop_rect=main.text_stop.get_rect()
+    text_stop_rect.center=stop_rect.center
+    main.surface.blit(main.text_stop,text_stop_rect)
+
     #set new board and put pawn on board
     board = main.restnewboard()
     info=[]
@@ -35,38 +41,80 @@ def pvsai(player1,player2):
             if [x,y] not in [[4,4],[4,5],[5,4],[5,5]]:
                 info.append([x,y])
 
-    flag_d=False
-    flag_u=False
-    flag_gameover=[1,1]
-
+    #prameter
     gameover=False
     turn='black'
+    gameover_show=True
 
     running = True
     while running:
         for event in pygame.event.get():
+            #quit
             if event.type==pygame.QUIT:
                 main.exit_game()
-            # return to main_menu
-            if event.type==pygame.MOUSEMOTION:
-                if event.pos[0] in range(1095,1176) and\
-                        event.pos[1] in range(770,851):
-                    flag_d=True
-                else:
-                    flag_d=False
-                # retry
-                if event.pos[0] in range(1095,1172) and\
+            # restart
+            if event.type==pygame.MOUSEBUTTONDOWN and \
+                    event.pos[0] in range(1095,1172) and\
                         event.pos[1] in range(50,125):
-                    flag_u=True
-                else:
-                    flag_u=False
-
-            if event.type==pygame.MOUSEBUTTONDOWN and flag_u:
                 return pvsai(player1,player2)
-
-            if event.type==pygame.MOUSEBUTTONDOWN and flag_d:
+            # return to main_menu
+            if event.type==pygame.MOUSEBUTTONDOWN and \
+                    event.pos[0] in range(1095,1176) and\
+                        event.pos[1] in range(770,851):
+                main.number_of_win_black=0
+                main.number_of_win_white=0
+                main.Draw=0
                 # menu.main_menu()
                 return
+
+            # stop game
+            if event.type==pygame.MOUSEBUTTONDOWN and\
+                    event.pos[0] in range(375,456) and\
+                    event.pos[1] in range(770,851):
+                #resume button
+                resume_rect=main.surface.blit(main.resumebutton,(375,770))
+                text_resume_rect=main.text_resume.get_rect()
+                text_resume_rect.center=resume_rect.center
+                main.surface.blit(main.text_resume,text_resume_rect)
+
+                pygame.display.update()
+                main.Runingclock.tick(main.fps)
+
+                flag=True
+                while flag:
+                    for event in pygame.event.get():
+                        if event.type==pygame.QUIT:
+                            main.exit_game()
+                        # restart game
+                        if event.type==pygame.MOUSEBUTTONDOWN and\
+                                event.pos[0] in range(1095,1172) and\
+                                event.pos[1] in range(50,125):
+                            return pvsai(player1,player2)
+                        # return to menu
+                        if event.type==pygame.MOUSEBUTTONDOWN and\
+                                event.pos[0] in range(1095,1176) and\
+                                event.pos[1] in range(770,851):
+                            # menu.main_menu()
+                            main.number_of_win_black=0
+                            main.number_of_win_white=0
+                            main.Draw=0
+                            return
+                        if event.type==pygame.MOUSEBUTTONDOWN and\
+                                event.pos[0] in range(375,456) and\
+                                event.pos[1] in range(770,851):
+                            flag=False
+
+                            stop_rect=main.surface.blit(main.stopbutton,(375,770))
+                            text_stop_rect=main.text_stop.get_rect()
+                            text_stop_rect.center=stop_rect.center
+                            main.surface.blit(main.text_stop,text_stop_rect)
+
+                            pygame.display.update()
+                            main.Runingclock.tick(main.fps)
+
+                            break
+                        else:
+                            time.sleep(0.01)
 
 
             # make move--------------------------------------------------------------------------------
@@ -223,7 +271,20 @@ def pvsai(player1,player2):
 
 
             else:
-                main.show_score(main.socreboard,board)
+                if gameover_show:
+                    main.show_score(main.socreboard,board)
+                    black,white=main.score(board)
+                    if black>white:
+                        main.number_of_win_black+=1
+                    elif black<white:
+                        main.number_of_win_white+=1
+                    elif black==white:
+                        main.Draw+=1
+
+                    main.Scoreboard(main.number_of_win_black,
+                                    main.number_of_win_white,
+                                    main.Draw)
+                    gameover_show=False
 
         if not gameover:
             # update board

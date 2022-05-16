@@ -210,7 +210,7 @@ def move_minimax(board, depth, player,info,end:bool,x=None,y=None):
             for [x, y] in possible_moves:
                 print('thinking',x,y)
                 tem_score = move_minimax(tem0_board,depth,'white',tem0_info,False,x,y)
-
+                print(tem_score)
                 if tem_score > score:
                     score = tem_score
                     move = [x,y]
