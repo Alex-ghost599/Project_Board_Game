@@ -1,5 +1,6 @@
 #Liangyz
 #2022/5/10  2:02
+
 from copy import deepcopy
 
 import main
@@ -111,40 +112,25 @@ def evaluate(board,player,info,eva=evaluation):
     xe = eva * x
     score = xe.sum() * 0.30
 
-    mobility = -15 * len(main.get_possible_moves(board,player,info))
+    if player == 'black':
+        mobility = 15 * len(main.get_possible_moves(board,player,info))
+    else:
+        mobility = -15 * len(main.get_possible_moves(board,player,info))
     mobility = mobility * 0.15
 
     number = 0
     b,w = main.score(board)
     if len(info) >18:
         if player == 'black':
-            number = (b-w) * 12
+            number = (b-w) * -12
         elif player == 'white':
             number = (w-b) * 12
     elif len(info) <=18:
         if player == 'black':
-            number = (w-b) * 12
+            number = (w-b) * -12
         elif player == 'white':
             number = (b-w) * 12
     number = number * 0.3
-
-    # def is_near_empty(x,y,board):
-    #     direction = [[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]]
-    #     for i,j in direction:
-    #         x0 = x
-    #         y0 = y
-    #         x0 += i
-    #         y0 += j
-    #         if board[x][y] == 0 and main.isonboard(x,y):
-    #             return True
-    #
-    # empty = 0
-    # for i in range(1,9):
-    #     for j in range(1,9):
-    #         if board[i][j] != 0:
-    #             if is_near_empty(i,j,board):
-    #                 empty = empty + -board[i][j] * 10
-    # empty = empty * 0.1
 
     corner = 0
     cor_map = [[1,1,1,1],
@@ -193,7 +179,8 @@ def move_minimax(board, depth, player,info,end:bool,x=None,y=None):
         return evaluate(tem0_board,player,info)
 
     possible_moves = main.get_possible_moves(tem0_board,player,tem0_info)
-
+    for i in range(len(possible_moves)):
+        possible_moves[i]=tuple(possible_moves[i])
     conner = [(1,1),(1,8),(8,1),(8,8)]
     set_p = set(conner) & set(possible_moves)
     if set_p:

@@ -12,6 +12,8 @@ import AI.Evaluate
 import AI.Score_max
 import AI.Score_min
 import AI.MiniMax
+import AI.Alpha_beta
+import AI.Alpha_beta_Hash
 
 
 
@@ -191,6 +193,24 @@ def pvsai(player1,player2):
                                 board[i][j]=1
                             turn='white'
                             break
+                    elif player1==6:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player1==7:
+                        x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
 
 
                 #for white
@@ -256,6 +276,24 @@ def pvsai(player1,player2):
                             board[x][y]=2
                             info.remove([x,y])
                             for i,j in main.flip_pawn(board,'white',x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==6:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==7:
+                        x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
                                 board[i][j]=2
                             turn='black'
                             break

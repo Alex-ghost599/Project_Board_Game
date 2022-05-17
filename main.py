@@ -41,6 +41,7 @@ gamepawn_white = pygame.transform.scale(gamepawn_white_origin,pawn_size)
 pygame.init()
 Runingclock = pygame.time.Clock()
 
+#surface needed---------------------------------------------------------------------------------------------------------------------
 surface = pygame.display.set_mode(window_size)
 
 white = pygame.Surface(board_size)
@@ -69,6 +70,10 @@ resumebutton = pygame.Surface((80,80))
 resumebutton.fill((52, 235, 119))
 text_resume = font_resume.render("RESUME",True,(0,0,0))
 
+time_show = pygame.Surface((200,50))
+time_show.fill((255,255,255))
+
+#set base surface---------------------------------------------------------------------------------------------------------------------
 surface.blit(white,(375,50))
 pygame.display.set_caption("Othello_lyz")
 
@@ -141,7 +146,7 @@ def get_possible_moves(board, player,info):
     possible_moves = []
     for [x,y] in info:
         if legal_move(board,player,x,y):
-            possible_moves.append((x,y))
+            possible_moves.append([x,y])
     random.shuffle(possible_moves)
     return possible_moves
 

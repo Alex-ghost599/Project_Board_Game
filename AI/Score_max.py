@@ -7,6 +7,8 @@ import random
 
 def move_score(board,player,info):
     possible_moves = main.get_possible_moves(board,player,info)
+    for i in range(len(possible_moves)):
+        possible_moves[i]=tuple(possible_moves[i])
     conner = [(1,1),(1,8),(8,1),(8,8)]
     set_p = set(conner) & set(possible_moves)
     if set_p:

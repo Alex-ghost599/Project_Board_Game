@@ -3,7 +3,6 @@
 
 import pygame
 import main
-import menu
 import time
 import menu
 import sys
@@ -13,10 +12,12 @@ import AI.Evaluate
 import AI.Score_max
 import AI.Score_min
 import AI.MiniMax
+import AI.Alpha_beta
+import AI.Alpha_beta_Hash
 
 
 
-def aivsai(player1,player2,number_of_rounds):
+def aivsai(player1,player2,number_of_rounds,time_start):
     # background
     main.surface.blit(main.gameboard,(375,50))
     #stop button
@@ -37,6 +38,7 @@ def aivsai(player1,player2,number_of_rounds):
     #prameter
     turn = 'black'
     NOR = number_of_rounds
+    game_over_flag = True
 
     #main loop
     running = True
@@ -53,7 +55,7 @@ def aivsai(player1,player2,number_of_rounds):
             if event.type == pygame.MOUSEBUTTONDOWN and \
                     event.pos[0] in range(1095, 1172) and \
                         event.pos[1] in range(50, 125):
-                return aivsai(player1,player2,NOR)
+                return aivsai(player1,player2,NOR,time_start)
 
             # return to menu
             if event.type == pygame.MOUSEBUTTONDOWN and \
@@ -87,7 +89,7 @@ def aivsai(player1,player2,number_of_rounds):
                         if event.type==pygame.MOUSEBUTTONDOWN and\
                                 event.pos[0] in range(1095,1172) and\
                                 event.pos[1] in range(50,125):
-                            return aivsai(player1,player2,NOR)
+                            return aivsai(player1,player2,NOR,time_start)
                         # return to menu
                         if event.type==pygame.MOUSEBUTTONDOWN and\
                                 event.pos[0] in range(1095,1176) and\
@@ -178,6 +180,26 @@ def aivsai(player1,player2,number_of_rounds):
                             board[i][j]=1
                         turn='white'
 
+                elif player1 == 6:
+                    x,y=AI.Alpha_beta.move_Alpha_beta(board,4,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+
+                elif player1 == 7:
+                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,4,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+
+
+
 
 
             #for white
@@ -227,6 +249,24 @@ def aivsai(player1,player2,number_of_rounds):
                             board[i][j]=2
                         turn='black'
 
+                elif player2 == 6:
+                    x,y=AI.Alpha_beta.move_Alpha_beta(board,4,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+
+                elif player2 == 7:
+                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,4,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+
             #check is there any legal move for both player
             if turn == 'black':
                 if not main.check_is_any_legal_move(board,info,'black'):
@@ -250,8 +290,6 @@ def aivsai(player1,player2,number_of_rounds):
                 main.Scoreboard(main.number_of_win_black,
                                 main.number_of_win_white,
                                 main.Draw)
-
-
                 # black_rect = main.surface.blit(main.winnerboard_b,(50,600))
                 # draw_rect = main.surface.blit(main.winnerboard_d,(170,600))
                 # white_rect = main.surface.blit(main.winnerboard_w,(290,600))
@@ -276,9 +314,38 @@ def aivsai(player1,player2,number_of_rounds):
                 #
                 # pygame.display.update()
                 # main.Runingclock.tick(main.fps)
-
                 if number_of_rounds != 0:
-                    return aivsai(player1,player2,number_of_rounds)
+                    return aivsai(player1,player2,number_of_rounds,time_start)
+                elif number_of_rounds == 0:
+                    time_end = time.time()
+                    sec = time_end - time_start
+                    m,s=divmod(sec,60)
+                    h,m=divmod(m,60)
+                    time_hms = "%d:%02d:%02d"%(h,m,s)
+                    time_rect=main.surface.blit(main.time_show,(90,850))
+                    font=pygame.font.SysFont('arial',50)
+                    time_text = font.render(time_hms,True,(0,0,0))
+                    time_text_rect = time_text.get_rect()
+                    time_text_rect.center = time_rect.center
+                    main.surface.blit(time_text,(time_text_rect))
+
+                    pygame.display.update()
+                    main.Runingclock.tick(main.fps)
+
+            elif NOR == 0 and \
+                    game_over_flag:
+                black,white=main.score(board)
+                if black>white:
+                    main.number_of_win_black+=1
+                elif black<white:
+                    main.number_of_win_white+=1
+                elif black==white:
+                    main.Draw+=1
+
+                main.Scoreboard(main.number_of_win_black,
+                                main.number_of_win_white,
+                                main.Draw)
+                game_over_flag = False
 
 
 

@@ -73,7 +73,9 @@ def main_menu():
                ('AI(Evaluate)',2),
                ('AI(Score[max])',3),
                ('AI(Score[min])',4),
-               ('AI(MinMax)',5)],
+               ('AI(MinMax)',5),
+               ('AI(Alpha_Beta)',6),
+               ('AI(Alpha_Beta_hash)',7)],
         dropselect_id='Player_1',
         font_size=16,
         onchange=onchange_dropselect_player1,
@@ -84,7 +86,7 @@ def main_menu():
         selection_box_inflate=(0,20),
         selection_box_margin=0,
         selection_box_text_margin=10,
-        selection_box_width=200,
+        selection_box_width=260,
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
@@ -104,7 +106,9 @@ def main_menu():
                ('AI(Evaluate)',2),
                ('AI(Score[max])',3),
                ('AI(Score[min])',4),
-               ('AI(MinMax)',5)],
+               ('AI(MinMax)',5),
+               ('AI(Alpha_Beta)',6),
+               ('AI(Alpha_Beta_hash)',7)],
         dropselect_id='Player_2',
         font_size=16,
         onchange=onchange_dropselect_player2,
@@ -115,7 +119,7 @@ def main_menu():
         selection_box_inflate=(0,20),
         selection_box_margin=0,
         selection_box_text_margin=10,
-        selection_box_width=200,
+        selection_box_width=260,
         selection_option_font_size=20,
         shadow_width=20,
         float=True,
@@ -213,7 +217,8 @@ def main_menu():
             pai.pvsai(player1,player2)
 
         elif player1 != 0 and player2 != 0:
-            aiai.aivsai(player1,player2,number_of_rounds)
+            time_start = time.time()
+            aiai.aivsai(player1,player2,number_of_rounds,time_start)
 
 
 

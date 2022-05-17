@@ -38,11 +38,9 @@ def move_eva(board,player,info,eva=evaluation):
         for [x0,y0] in possible_moves:
             x = x0 - 1
             y = y0 - 1
-            if result0 < eva[x][y]:
-                result0 = eva[x][y]
+            result0 = max(result0,eva[x][y])
+            if result0 == eva[x][y]:
                 move = [x0,y0]
-            elif result0 == eva[x][y]:
-                move = random.choice([[x0,y0],[move[0],move[1]]])
             else:
                 move = move
         return move
