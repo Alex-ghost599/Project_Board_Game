@@ -50,13 +50,13 @@ white.fill((255,255,255))
 socreboard = pygame.Surface((800,200))
 socreboard.fill((130, 134, 136))
 
-winnerboard_b = pygame.Surface((50,50))
+winnerboard_b = pygame.Surface((70,70))
 winnerboard_b.fill((255,255,255))
 
-winnerboard_w = pygame.Surface((50,50))
+winnerboard_w = pygame.Surface((70,70))
 winnerboard_w.fill((255,255,255))
 
-winnerboard_d = pygame.Surface((50,50))
+winnerboard_d = pygame.Surface((70,70))
 winnerboard_d.fill((255,255,255))
 
 font_stop = pygame.font.SysFont('arial',30)
@@ -191,9 +191,9 @@ def show_score(scoreboard,board):
 def Scoreboard(number_of_win_black,
                number_of_win_white,
                Draw):
-    black_rect=surface.blit(winnerboard_b,(50,600))
-    draw_rect=surface.blit(winnerboard_d,(170,600))
-    white_rect=surface.blit(winnerboard_w,(290,600))
+    black_rect=surface.blit(winnerboard_b,(40,590))
+    draw_rect=surface.blit(winnerboard_d,(160,590))
+    white_rect=surface.blit(winnerboard_w,(280,590))
 
     font=pygame.font.SysFont('arial',50)
 

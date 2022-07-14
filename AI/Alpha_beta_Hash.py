@@ -10,14 +10,15 @@ import numpy as np
 
 path = r"AI/HASH/Alpha_beta_Hash.npy"
 hash_board_map = np.load(path, allow_pickle=True).item()
+tem_hash_board_map = deepcopy(hash_board_map)
 
 # set hash function
 def set_hash_board(board, current, depth, alpha, beta, score, move):
-    hash_board_map[tuple([tuple([0 if piece == 0 else (1 if piece == current else -1) for piece in line]) for line in board] + [depth, alpha, beta])] = (score, move)
+    tem_hash_board_map[tuple([tuple([0 if piece == 0 else (1 if piece == current else -1) for piece in line]) for line in board] + [depth, alpha, beta])] = (score, move)
 
 def get_hash_board(board, current, depth, alpha, beta):
     key = tuple([tuple([0 if piece == 0 else (1 if piece == current else -1) for piece in line]) for line in board] + [depth, alpha, beta])
-    return hash_board_map.get(key)
+    return tem_hash_board_map.get(key)
 
 # evaluate function and matrix
 evaluation = [
@@ -211,7 +212,7 @@ def move_Alpha_beta_hash(board, depth, player,info,
 
             if end:
                 set_hash_board(save_board, current, save_depth, save_alpha, save_beta, score, move)
-                np.save(path,hash_board_map)
+                # np.save(path,hash_board_map)
                 return move
             else:
                 # print(score,'black')
@@ -244,7 +245,7 @@ def move_Alpha_beta_hash(board, depth, player,info,
                 # file=open(path,'w')
                 # file.write(str(hash_board_map))
                 # file.close()
-                np.save(path,hash_board_map)
+                # np.save(path,hash_board_map)
                 return move
             else:
                 # print(score,'white')

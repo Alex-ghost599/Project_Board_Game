@@ -14,6 +14,7 @@ import AI.Score_min
 import AI.MiniMax
 import AI.Alpha_beta
 import AI.Alpha_beta_Hash
+import AI.MCTS
 
 
 
@@ -211,6 +212,15 @@ def pvsai(player1,player2):
                                 board[i][j]=1
                             turn='white'
                             break
+                    elif player1==8:
+                        x,y=AI.MCTS.move_MCTS(board,turn,info)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
 
 
                 #for white
@@ -290,6 +300,15 @@ def pvsai(player1,player2):
                             break
                     elif player2==7:
                         x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==8:
+                        x,y=AI.MCTS.move_MCTS(board,turn,info)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])

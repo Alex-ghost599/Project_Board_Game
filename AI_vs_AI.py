@@ -1,6 +1,8 @@
 #Liangyz
 #2022/5/2  18:41
+from copy import deepcopy
 
+import numpy as np
 import pygame
 import main
 import time
@@ -14,6 +16,7 @@ import AI.Score_min
 import AI.MiniMax
 import AI.Alpha_beta
 import AI.Alpha_beta_Hash
+import AI.MCTS
 
 
 
@@ -34,7 +37,17 @@ def aivsai(player1,player2,number_of_rounds,time_start):
         for y in range(1,9):
             if [x,y] not in [[4,4],[4,5],[5,4],[5,5]]:
                 info.append([x,y])
+            if board[x][y] == 1:
+                main.surface.blit(main.gamepawn_black,
+                                  (y*main.cell_size[0]+main.space_size[0]+375,
+                                   x*main.cell_size[1]+main.space_size[1]+50))
+            elif board[x][y] == 2:
+                main.surface.blit(main.gamepawn_white,
+                                  (y*main.cell_size[0]+main.space_size[0]+375,
+                                   x*main.cell_size[1]+main.space_size[1]+50))
 
+        pygame.display.update()
+        main.Runingclock.tick(main.fps)
     #prameter
     turn = 'black'
     NOR = number_of_rounds
@@ -190,7 +203,16 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 7:
-                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,4,turn,info,True)
+                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,5,turn,info,True)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+
+                elif player1 == 8:
+                    x,y=AI.MCTS.move_MCTS(board,turn,info)
                     if [x,y]!=[None,None]:
                         board[x][y]=1
                         info.remove([x,y])
@@ -258,8 +280,17 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                             board[i][j]=2
                         turn='black'
 
+                elif player2 == 8:
+                    x,y=AI.MCTS.move_MCTS(board,turn,info)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+
                 elif player2 == 7:
-                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,4,turn,info,True)
+                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,5,turn,info,True)
                     if [x,y]!=[None,None]:
                         board[x][y]=2
                         info.remove([x,y])
@@ -290,6 +321,18 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                 main.Scoreboard(main.number_of_win_black,
                                 main.number_of_win_white,
                                 main.Draw)
+                if player1==7:
+                    if black>white:
+                        AI.Alpha_beta_Hash.hash_board_map=deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                        np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                    else:
+                        AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                if player2==7:
+                    if white>black:
+                        AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                    else:
+                        AI.Alpha_beta_Hash.hash_board_map=deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                        np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
                 # black_rect = main.surface.blit(main.winnerboard_b,(50,600))
                 # draw_rect = main.surface.blit(main.winnerboard_d,(170,600))
                 # white_rect = main.surface.blit(main.winnerboard_w,(290,600))
@@ -345,6 +388,20 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                 main.Scoreboard(main.number_of_win_black,
                                 main.number_of_win_white,
                                 main.Draw)
+
+                if player1 == 7:
+                    if black > white:
+                        AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                        np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                    else:
+                        AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                if player2 == 7:
+                    if black > white or black == white:
+                        AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                    else:
+                        AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                        np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+
                 game_over_flag = False
 
 
