@@ -12,48 +12,48 @@ from copy import deepcopy
 #evaluation function:
 evaluation=[
         [0,0,0,0,0,0,0,0,0,0],
-        [0,10,1,3,3,3,3,1,10,0],
+        [0,5,1,3,3,3,3,1,5,0],
         [0,1,1,2,2,2,2,1,1,0],
         [0,3,2,4,4,4,4,2,3,0],
-        [0,3,2,4,0,0,4,2,3,0],
-        [0,3,2,4,0,0,4,2,3,0],
+        [0,3,2,4,1,1,4,2,3,0],
+        [0,3,2,4,1,1,4,2,3,0],
         [0,3,2,4,4,4,4,2,3,0],
         [0,1,1,2,2,2,2,1,2,0],
-        [0,10,1,3,3,3,3,1,10,0],
+        [0,5,1,3,3,3,3,1,5,0],
         [0,0,0,0,0,0,0,0,0,0],
     ]
 evaluation=np.array(evaluation)
 
-hype_parameter = 2
+hype_parameter = 3.2
 
 def evaluate(board,player,info,eva=evaluation):
     # socre of board
     x = deepcopy(board)
     x[x==2] = -1
     xsum =eva*x
-    score = xsum.sum()*0.35
+    score = xsum.sum()
 
     #score of mobility of opposite player
     if player == 'black':
         mobility = -5*len(main.get_possible_moves(board,'white',info))
     else:
         mobility = 5*len(main.get_possible_moves(board,'black',info))
-    mobility = mobility * 0.4
+    # mobility = mobility * 0.4
 
     #score of pieces
     number = 0
     b,w = main.score(board)
     if len(info)>18:
         if player == 'black':
-            number = (b-w)*-10
+            number = (b-w)*-5
         elif player == 'white':
-            number = (w-b)*10
+            number = (w-b)*5
     elif len(info)<=18:
         if player == 'black':
-            number = (b-w)*10
+            number = (b-w)*5
         elif player == 'white':
-            number = (w-b)*-10
-    number = number * 0.25
+            number = (w-b)*-5
+    # number = number * 0.25
 
 
 
@@ -64,12 +64,13 @@ class Node:
         self.board = board
         self.player = player
         self.info = info
-        self.parent = parent
-        self.children = []
-        self.move = move
-        self.state_value = 0
-        self.result_value = 0
+        self.Init_value = 0
+        self.result_value = []
         self.visit = 0
+        self.children=[]
+        self.move=move
+        self.parent = parent
+
 
     def add_child(self,board,player,info,move):
         board = deepcopy(board)
@@ -79,11 +80,13 @@ class Node:
         self.children.append(child)
         return child
 
-    def update_score(self,result_value):
+    def update_score(self,reword):
         self.visit += 1
-        self.result_value += result_value
+        a = self.result_value
+        a.append(reword)
+        self.result_value = a
         if self.parent:
-            self.parent.update_score(result_value)
+            self.parent.update_score(reword)
 
     def fully_expanded(self):
         return len(self.children) == len(main.get_possible_moves(self.board,self.player,self.info))
@@ -97,9 +100,10 @@ class Node:
     def best_child(self):
         for child in self.children:
             if child.player == 'black':
-                return max(self.children,key=lambda x:((x.result_value)/(1+x.visit))+hype_parameter*math.sqrt(math.log(x.find_root().visit+1)/(1+x.visit)))
+                return max(self.children,key=lambda x:(sum(x.result_value) + hype_parameter/(1+x.visit) * x.Init_value))
+            # (x.result_value)/(1+x.visit))+hype_parameter*math.sqrt(math.log(x.find_root().visit+1)/(1+x.visit))
             else:
-                return min(self.children,key=lambda x:((x.result_value)/(1+x.visit))-hype_parameter*math.sqrt(math.log(x.find_root().visit+1)/(1+x.visit)))
+                return min(self.children,key=lambda x:(sum(x.result_value) + hype_parameter/(1+x.visit) * x.Init_value))
 
 
     def select_child(self):
@@ -163,9 +167,9 @@ def simulation(node,eva=evaluation):
     b,w = main.score(board)
 
     if b>w:
-        return 20
+        return 1
     elif b<w:
-        return -20
+        return -1
     else:
         # if node.player == 'black':
         #     return 1
@@ -174,7 +178,7 @@ def simulation(node,eva=evaluation):
         return 0
 
 
-def move_MCTS(in_board,in_player,in_info,max_iter=200):
+def move_MCTS(in_board,in_player,in_info,max_iter=1000):
     board = deepcopy(in_board)
     player = deepcopy(in_player)
     info = deepcopy(in_info)
@@ -197,24 +201,30 @@ def move_MCTS(in_board,in_player,in_info,max_iter=200):
                     child.info.remove(child.move)
                     for i,j in main.flip_pawn(child.board,child.player,child.move[0],child.move[1]):
                         child.board[i][j] = 2
-            # initialized state_value of child
-            # for child in root.children:
-            #     child.state_value = evaluate(child.board,child.player,child.info)/(child.visit+1)
-            #     # child.score = hype_parameter * child.state_value
+            # initialized Init_value of child
+            Init_list = []
+            for child in root.children:
+                Init_list.append(evaluate(child.board,child.player,child.info))
+            for child in root.children:
+                child.Init_value = evaluate(child.board,child.player,child.info)/sum(map(abs,Init_list))
+                # child.score = hype_parameter * child.Init_value
         # select best child
-        best_child_selected = root.best_child()
+
+        # print(root.best_child().result_value)
+        # print(root.best_child().visit)
+        # print(type(root.best_child().result_value))
         # expand child
-        if best_child_selected.player=='black':
+        if root.best_child().player=='black':
             opposite_player='white'
         else:
             opposite_player='black'
-        if not main.gameover(best_child_selected.board,best_child_selected.info) and \
-        main.check_is_any_legal_move(best_child_selected.board,best_child_selected.info,opposite_player):
-            if not len(best_child_selected.children) == len(main.get_possible_moves(best_child_selected.board,opposite_player,best_child_selected.info)):
-                possible_moves_opposite = main.get_possible_moves(best_child_selected.board,opposite_player,best_child_selected.info)
+        if not main.gameover(root.best_child().board,root.best_child().info) and \
+        main.check_is_any_legal_move(root.best_child().board,root.best_child().info,opposite_player):
+            if not len(root.best_child().children) == len(main.get_possible_moves(root.best_child().board,opposite_player,root.best_child().info)):
+                possible_moves_opposite = main.get_possible_moves(root.best_child().board,opposite_player,root.best_child().info)
                 for move in possible_moves_opposite:
-                    best_child_selected.add_child(best_child_selected.board,opposite_player,best_child_selected.info,move)
-                for child in best_child_selected.children:
+                    root.best_child().add_child(root.best_child().board,opposite_player,root.best_child().info,move)
+                for child in root.best_child().children:
                     if child.player == 'black':
                         child.board[child.move[0]][child.move[1]] = 1
                         child.info.remove(child.move)
@@ -225,19 +235,20 @@ def move_MCTS(in_board,in_player,in_info,max_iter=200):
                         child.info.remove(child.move)
                         for i,j in main.flip_pawn(child.board,child.player,child.move[0],child.move[1]):
                             child.board[i][j] = 2
-                # initialized state_value of child
-                # for child in best_child_selected.children:
-                #     child.state_value = evaluate(child.board,child.player,child.info)/(child.visit+1)
-                #     # child.score = hype_parameter * child.state_value
-            best_expanded_child = best_child_selected.best_child()
+            # # initialized Init_value of child
+            # for child in root.best_child().children:
+            #     child.Init_value = evaluate(child.board,child.player,child.info)
+                # child.score = hype_parameter * child.Init_value
+            # best_expanded_child = root.best_child().best_child()
             # simulate
-            reward = simulation(best_expanded_child)
+            select_child = random.choice(root.best_child().children)
+            reward = simulation(select_child)
             # backpropagate
-            best_expanded_child.update_score(reward)
+            select_child.update_score(reward)
         else:
-            return best_child_selected.move
+            return root.best_child().move
     # return best move
-    print('state_value:',root.select_child().state_value)
+    print('Init_value:',root.select_child().Init_value)
     print('reward:',root.select_child().result_value)
     print('visit:',root.select_child().visit)
     return root.best_move()
