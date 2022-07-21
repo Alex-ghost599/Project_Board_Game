@@ -125,7 +125,13 @@ def move_eva(board,player,info,eva=evaluation):
             if result0 == eva[x][y]:
                 move = [x,y]
             else:
-                move = move
+                move = random.choice([[x,y],move])
+                # flag = random.random()
+                # if flag < 0.5:
+                #     move = [x,y]
+                # else:
+                #     move = move
+
         return move
     else:
         return None,None
