@@ -17,7 +17,7 @@ import AI.MiniMax
 import AI.Alpha_beta
 import AI.Alpha_beta_Hash
 import AI.MCTS
-
+import AI.DQN_run
 
 
 def aivsai(player1,player2,number_of_rounds,time_start):
@@ -220,6 +220,15 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                             board[i][j]=1
                         turn='white'
 
+                elif player1 == 9:
+                    x,y=AI.DQN_run.DQN_move(board,turn,info)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+
 
 
 
@@ -297,6 +306,16 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=2
                         turn='black'
+
+                elif player2 == 9:
+                    x,y=AI.DQN_run.DQN_move(board,turn,info)
+                    if [x,y]!=[None,None]:
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+
 
             #check is there any legal move for both player
             if turn == 'black':

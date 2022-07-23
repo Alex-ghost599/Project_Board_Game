@@ -76,7 +76,8 @@ def main_menu():
                ('AI(MinMax)',5),
                ('AI(Alpha_Beta)',6),
                ('AI(Alpha_Beta_hash)',7),
-               ('AI(MCTS)',8)],
+               ('AI(MCTS)',8),
+               ('AI(DQN)',9)],
         dropselect_id='Player_1',
         font_size=16,
         onchange=onchange_dropselect_player1,
@@ -110,7 +111,8 @@ def main_menu():
                ('AI(MinMax)',5),
                ('AI(Alpha_Beta)',6),
                ('AI(Alpha_Beta_hash)',7),
-               ('AI(MCTS)',8)],
+               ('AI(MCTS)',8),
+               ('AI(DQN)',9)],
         dropselect_id='Player_2',
         font_size=16,
         onchange=onchange_dropselect_player2,
@@ -126,6 +128,20 @@ def main_menu():
         shadow_width=20,
         float=True,
     ).translate(-412,200)
+
+    menu.add.toggle_switch(
+        title='Data Collection',
+        default=False,
+        toggleswitch_id= 'Data_Collection',
+        font_size=20,
+        margin=(0,5),
+        state_values=(0,1),
+        # onchange = data_collection,
+        state_text_font_color=((0,0,0),(0,0,0)),
+        state_text_font_size=15,
+        switch_margin=(15,0),
+        width=70
+    ).translate(-412,265)
 
     menu.add.label(
         'Number of Rounds',
@@ -208,8 +224,9 @@ def main_menu():
     def start_game() -> None:
         player1=menu.get_widget(widget_id='Player_1').get_value()[1]
         player2=menu.get_widget(widget_id='Player_2').get_value()[1]
+        data_collection=menu.get_widget(widget_id='Data_Collection').get_value()
         number_of_rounds=round(menu.get_widget(widget_id='range_slider').get_value())
-        # print(player1,player2,number_of_rounds)
+        # print(player1,player2,number_of_rounds,data_collection)
         if player1 == player2 == 0:
             P_vs_P.pvsp()
         elif player1 == 0 and player2 != 0:
