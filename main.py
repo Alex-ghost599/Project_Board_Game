@@ -5,14 +5,13 @@
 
 import pygame
 import sys
+import os
 import time
 import random
 import numpy as np
 # import P_vs_P
 # import P_vs_AI
 # import AI_vs_AI
-
-
 import menu
 
 # parameters---------------------------------------------------------------------------------------------------------------------

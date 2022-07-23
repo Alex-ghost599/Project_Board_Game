@@ -55,9 +55,13 @@ def evaluate(board,player,info,eva=evaluation):
             number = (w-b)*-5
     # number = number * 0.25
 
+    z = score + mobility + number
+
+    z = 1.0/(1.0+math.exp(-z))
 
 
-    return score + mobility + number
+
+    return z
 
 class Node:
     def __init__(self,board,player,info,move=None,parent=None):
@@ -254,7 +258,7 @@ def move_MCTS(in_board,in_player,in_info,max_iter=1000):
         else:
             return root.best_child().move
     # return best move
-    print('Init_value:',root.select_child().Init_value)
-    print('reward:',root.select_child().result_value)
+    # print('Init_value:',root.select_child().Init_value)
+    # print('reward:',root.select_child().result_value)
     print('visit:',root.select_child().visit)
     return root.best_move()

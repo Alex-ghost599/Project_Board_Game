@@ -195,9 +195,9 @@ def move_minimax(board, depth, player,info,end:bool,x=None,y=None):
         if player == 'black':
             score= -99999
             for [x, y] in possible_moves:
-                print('thinking',x,y)
+                # print('thinking',x,y)
                 tem_score = move_minimax(tem0_board,depth,'white',tem0_info,False,x,y)
-                print(tem_score)
+                # print(tem_score)
                 if tem_score > score:
                     score = tem_score
                     move = [x,y]
@@ -210,7 +210,7 @@ def move_minimax(board, depth, player,info,end:bool,x=None,y=None):
             if end:
                 return move
             else:
-                print(score,'black')
+                # print(score,'black')
                 return score
 
 
@@ -218,7 +218,7 @@ def move_minimax(board, depth, player,info,end:bool,x=None,y=None):
         elif player == 'white':
             score = 99999
             for [x, y] in possible_moves:
-                print('thinking',x,y)
+                # print('thinking',x,y)
                 tem_score = move_minimax(tem0_board,depth,'black',tem0_info,False,x,y)
 
                 if tem_score < score:
@@ -233,5 +233,5 @@ def move_minimax(board, depth, player,info,end:bool,x=None,y=None):
             if end:
                 return move
             else:
-                print(score,'white')
+                # print(score,'white')
                 return score

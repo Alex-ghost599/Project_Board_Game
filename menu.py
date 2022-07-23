@@ -1,6 +1,9 @@
 #Liangyz
 #2022/5/2  4:30
-
+import datetime
+import os
+import pandas as pd
+import numpy as np
 import pygame
 import time
 import pygame_menu
@@ -9,18 +12,43 @@ import P_vs_P
 import P_vs_AI as pai
 import AI_vs_AI as aiai
 
+
+def mkdir(path):
+    folder = os.path.exists(path)
+
+    if not folder:  #check if there is a folder
+        os.makedirs(path)  #makedirs folder if there is no folder
+
+    else:
+        pass
+
+
+def mkcsv(path,data):
+    file = os.path.exists(path)
+    columns=['Board','Game Time','Move Time','Action List','Action List Count','Score','Winner']
+    if not file:
+        df = pd.DataFrame(data=[data],columns=columns)
+        df.to_csv(path,index=False)
+    else:
+        df = pd.DataFrame(data=[data],columns=columns)
+        df.to_csv(path,index=False,mode='a',header=False)
+
+
 def button_onmouseover(w: 'pygame_menu.widgets.Widget',_) -> None:
     if w.readonly:
         return
     w.set_background_color((6,255,0))
+
 
 def button_onmouseover_quit(w: 'pygame_menu.widgets.Widget',_) -> None:
     if w.readonly:
         return
     w.set_background_color((255,0,0))
 
+
 def button_onmouseleave(w: 'pygame_menu.widgets.Widget',_) -> None:
     w.set_background_color((58,152,255))
+
 
 def main_menu():
     theme = pygame_menu.Theme(
@@ -42,15 +70,34 @@ def main_menu():
         width=1200
     )
 
-    def onchange_dropselect_player1(*args) -> None:
-        b = menu.get_widget('start')
-        b.is_selectable = True
-        b.set_cursor(pygame_menu.locals.CURSOR_HAND)
+    def onchange_dropselect(*args) -> None:
+        ooo=menu.get_widget(widget_id='Player_1')
+        oooo=menu.get_widget(widget_id='Player_2')
+        a = ooo.get_index()
+        aa = oooo.get_index()
+        if a != -1 and aa != -1:
+            b = menu.get_widget('start')
+            b.is_selectable = True
+            b.readonly=False
+            b.set_cursor(pygame_menu.locals.CURSOR_HAND)
 
-    def onchange_dropselect_player2(*args) -> None:
-        b = menu.get_widget('start')
-        b.readonly = False
-        b.set_cursor(pygame_menu.locals.CURSOR_HAND)
+    # def onchange_dropselect_player2(*args) -> None:
+    #     b = menu.get_widget('start')
+    #     b.readonly = False
+    #     b.set_cursor(pygame_menu.locals.CURSOR_HAND)
+
+    def onchange_toggle_switch(state_value, *args) -> None:
+        if state_value:
+            b = menu.get_widget('range_slider')
+            b.is_selectable = False
+            b.readonly = True
+            b.set_value(0)
+            b.set_cursor(pygame_menu.locals.CURSOR_HAND)
+        else:
+            b = menu.get_widget('range_slider')
+            b.is_selectable = True
+            b.readonly = False
+            b.set_cursor(pygame_menu.locals.CURSOR_HAND)
 
     menu.add.label(
         '',
@@ -80,7 +127,7 @@ def main_menu():
                ('AI(DQN)',9)],
         dropselect_id='Player_1',
         font_size=16,
-        onchange=onchange_dropselect_player1,
+        onchange=onchange_dropselect,
         padding=0,
         placeholder='Select one',
         placeholder_add_to_selection_box=False,
@@ -115,7 +162,7 @@ def main_menu():
                ('AI(DQN)',9)],
         dropselect_id='Player_2',
         font_size=16,
-        onchange=onchange_dropselect_player2,
+        onchange=onchange_dropselect,
         padding=0,
         placeholder='Select one',
         placeholder_add_to_selection_box=False,
@@ -129,14 +176,15 @@ def main_menu():
         float=True,
     ).translate(-412,200)
 
+
     menu.add.toggle_switch(
         title='Data Collection',
         default=False,
-        toggleswitch_id= 'Data_Collection',
+        toggleswitch_id='Data_Collection',
         font_size=20,
         margin=(0,5),
         state_values=(0,1),
-        # onchange = data_collection,
+        onchange=onchange_toggle_switch,
         state_text_font_color=((0,0,0),(0,0,0)),
         state_text_font_size=15,
         switch_margin=(15,0),
@@ -150,6 +198,7 @@ def main_menu():
         margin=(0,5),
         float=True,
     ).translate(-412,310)
+
     menu.add.label(
         '(0 for Manually):',
         font_name=pygame_menu.font.FONT_FIRACODE_BOLD,
@@ -222,11 +271,28 @@ def main_menu():
 
 
     def start_game() -> None:
+        """Start game."""
         player1=menu.get_widget(widget_id='Player_1').get_value()[1]
         player2=menu.get_widget(widget_id='Player_2').get_value()[1]
-        data_collection=menu.get_widget(widget_id='Data_Collection').get_value()
         number_of_rounds=round(menu.get_widget(widget_id='range_slider').get_value())
+
+        data_collection=menu.get_widget(widget_id='Data_Collection').get_value()
+        if data_collection == 1:
+            #making dir for data collection
+            path_dir='D:\\Durham\\Project\\code\\Data_collection'
+            player1_name=menu.get_widget(widget_id='Player_1').get_value()[0][0]
+            player2_name=menu.get_widget(widget_id='Player_2').get_value()[0][0]
+            data_path=path_dir+'\\'+\
+                      player1_name+'\\'+\
+                      player2_name+'\\'+\
+                      player1_name+'_VS_'+player2_name
+            # print(data_path)
+            mkdir(data_path)
+        else:
+            pass
         # print(player1,player2,number_of_rounds,data_collection)
+        # print(player1_name[0] + player2_name[0])
+
         if player1 == player2 == 0:
             P_vs_P.pvsp()
         elif player1 == 0 and player2 != 0:
@@ -236,10 +302,22 @@ def main_menu():
             pai.pvsai(player1,player2)
 
         elif player1 != 0 and player2 != 0:
-            time_start = time.time()
-            aiai.aivsai(player1,player2,number_of_rounds,time_start)
+            if data_collection == 0:
+                aiai.aivsai(player1,player2,number_of_rounds,data_collection)
+            else:
+                times = 1000
+                # game_data = []
+                game_csv_path = data_path + '\\' +\
+                      player1_name + '_VS_' + player2_name + '_' +\
+                      str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")) + '.csv'
 
-
+                if number_of_rounds == 0:
+                    for i in range(times):
+                        game_data = aiai.aivsai(player1,player2,number_of_rounds,data_collection,times=i)
+                        player1,player2 = player2,player1
+                        # print(game_data)
+                        mkcsv(game_csv_path,game_data)
+                        # print(game_csv_path)
 
     start = menu.add.button(
         'Start',
@@ -275,7 +353,8 @@ def main_menu():
             if event.type == pygame.QUIT:
                 main.exit_game()
             elif event.type == pygame.MOUSEMOTION:
-                print(event.pos)
+                pass
+                # print(event.pos)
 
         if menu.is_enabled():
             menu.update(pygame.event.get())

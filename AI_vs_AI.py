@@ -6,6 +6,7 @@ import numpy as np
 import pygame
 import main
 import time
+from decimal import Decimal
 import menu
 import sys
 # sys.path.append('/AI/')
@@ -20,7 +21,7 @@ import AI.MCTS
 import AI.DQN_run
 
 
-def aivsai(player1,player2,number_of_rounds,time_start):
+def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
     # background
     main.surface.blit(main.gameboard,(375,50))
     #stop button
@@ -52,6 +53,13 @@ def aivsai(player1,player2,number_of_rounds,time_start):
     turn = 'black'
     NOR = number_of_rounds
     game_over_flag = True
+    #data_collection_parameter
+    gametime_start=time.time()
+    black_movetime_list = []
+    white_movetime_list = []
+    black_action_list = []
+    white_action_list = []
+
 
     #main loop
     running = True
@@ -68,7 +76,7 @@ def aivsai(player1,player2,number_of_rounds,time_start):
             if event.type == pygame.MOUSEBUTTONDOWN and \
                     event.pos[0] in range(1095, 1172) and \
                         event.pos[1] in range(50, 125):
-                return aivsai(player1,player2,NOR,time_start)
+                return aivsai(player1,player2,number_of_rounds,data_collection)
 
             # return to menu
             if event.type == pygame.MOUSEBUTTONDOWN and \
@@ -102,7 +110,7 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         if event.type==pygame.MOUSEBUTTONDOWN and\
                                 event.pos[0] in range(1095,1172) and\
                                 event.pos[1] in range(50,125):
-                            return aivsai(player1,player2,NOR,time_start)
+                            return aivsai(player1,player2,number_of_rounds,data_collection)
                         # return to menu
                         if event.type==pygame.MOUSEBUTTONDOWN and\
                                 event.pos[0] in range(1095,1176) and\
@@ -149,8 +157,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
             #for black:
             if turn == 'black':
                 if player1 == 1:
+                    black_move_time_start=time.time()
                     x,y = AI.Random.move_random(board,turn,info)
+                    black_move_time_end=time.time()
                     if [x,y] != [None,None]:
+                        black_action_list.append([x,y])
                         board[x][y] = 1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -158,8 +169,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn = 'white'
 
                 elif player1 == 2:
+                    black_move_time_start=time.time()
                     x,y = AI.Evaluate.move_eva(board,turn,info)
+                    black_move_time_end=time.time()
                     if [x,y] != [None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -167,8 +181,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 3:
+                    black_move_time_start=time.time()
                     x,y=AI.Score_max.move_score(board,turn,info)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -176,8 +193,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 4:
+                    black_move_time_start=time.time()
                     x,y=AI.Score_min.move_score(board,turn,info)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -185,8 +205,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 5:
+                    black_move_time_start=time.time()
                     x,y=AI.MiniMax.move_minimax(board,4,turn,info,True)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -194,8 +217,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 6:
+                    black_move_time_start=time.time()
                     x,y=AI.Alpha_beta.move_Alpha_beta(board,4,turn,info,True)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -203,8 +229,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 7:
+                    black_move_time_start=time.time()
                     x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,5,turn,info,True)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -212,8 +241,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 8:
+                    black_move_time_start=time.time()
                     x,y=AI.MCTS.move_MCTS(board,turn,info)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -221,8 +253,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
                 elif player1 == 9:
+                    black_move_time_start=time.time()
                     x,y=AI.DQN_run.DQN_move(board,turn,info)
+                    black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
                         board[x][y]=1
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -230,14 +265,23 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='white'
 
 
+                black_move_time_s = str(black_move_time_end - black_move_time_start)
+                # print('black move time:',black_move_time_s)
+                black_move_time_d = Decimal(black_move_time_s).quantize(Decimal('0.001'),rounding='ROUND_HALF_UP')
+                # print('black move time:',black_move_time_d)
+                # print(type(black_move_time_d))
+                black_movetime_list.append(float(black_move_time_d))
 
 
 
             #for white
             elif turn == 'white':
                 if player2 == 1:
+                    white_move_time_start=time.time()
                     x,y = AI.Random.move_random(board,turn,info)
+                    white_move_time_end=time.time()
                     if [x,y] != [None,None]:
+                        white_action_list.append([x,y])
                         board[x][y] = 2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -245,8 +289,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn = 'black'
 
                 elif player2 == 2:
+                    white_move_time_start=time.time()
                     x,y = AI.Evaluate.move_eva(board,turn,info)
+                    white_move_time_end=time.time()
                     if [x,y] != [None,None]:
+                        white_action_list.append([x,y])
                         board[x][y] = 2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -254,8 +301,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 3:
+                    white_move_time_start=time.time()
                     x,y=AI.Score_max.move_score(board,turn,info)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -263,8 +313,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 4:
+                    white_move_time_start=time.time()
                     x,y=AI.Score_min.move_score(board,turn,info)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -272,8 +325,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 5:
+                    white_move_time_start=time.time()
                     x,y=AI.MiniMax.move_minimax(board,4,turn,info,True)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -281,8 +337,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 6:
+                    white_move_time_start=time.time()
                     x,y=AI.Alpha_beta.move_Alpha_beta(board,4,turn,info,True)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -290,8 +349,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 8:
+                    white_move_time_start=time.time()
                     x,y=AI.MCTS.move_MCTS(board,turn,info)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -299,8 +361,11 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 7:
+                    white_move_time_start=time.time()
                     x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,5,turn,info,True)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
@@ -308,13 +373,25 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                         turn='black'
 
                 elif player2 == 9:
+                    white_move_time_start=time.time()
                     x,y=AI.DQN_run.DQN_move(board,turn,info)
+                    white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
                         board[x][y]=2
                         info.remove([x,y])
                         for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=2
                         turn='black'
+
+
+                white_move_time_s = str(white_move_time_end - white_move_time_start)
+                # print('white move time:',white_move_time_s)
+                white_move_time_d = Decimal(white_move_time_s).quantize(Decimal('0.001'),rounding='ROUND_HALF_UP')
+                # print('white move time:',white_move_time_d)
+                white_movetime_list.append(float(white_move_time_d))
+
+
 
 
             #check is there any legal move for both player
@@ -324,6 +401,7 @@ def aivsai(player1,player2,number_of_rounds,time_start):
             elif turn == 'white':
                 if not main.check_is_any_legal_move(board,info,'white'):
                     turn = 'black'
+
 
         else:
             main.show_score(main.socreboard,board)
@@ -377,13 +455,14 @@ def aivsai(player1,player2,number_of_rounds,time_start):
                 # pygame.display.update()
                 # main.Runingclock.tick(main.fps)
                 if number_of_rounds != 0:
-                    return aivsai(player1,player2,number_of_rounds,time_start)
+                    return aivsai(player1,player2,number_of_rounds,data_collection)
                 elif number_of_rounds == 0:
-                    time_end = time.time()
-                    sec = time_end - time_start
+                    gametime_end = time.time()
+                    sec = gametime_end - gametime_start
                     m,s=divmod(sec,60)
                     h,m=divmod(m,60)
                     time_hms = "%d:%02d:%02d"%(h,m,s)
+
                     time_rect=main.surface.blit(main.time_show,(90,850))
                     font=pygame.font.SysFont('arial',50)
                     time_text = font.render(time_hms,True,(0,0,0))
@@ -396,32 +475,104 @@ def aivsai(player1,player2,number_of_rounds,time_start):
 
             elif NOR == 0 and \
                     game_over_flag:
-                black,white=main.score(board)
-                if black>white:
-                    main.number_of_win_black+=1
-                elif black<white:
-                    main.number_of_win_white+=1
-                elif black==white:
-                    main.Draw+=1
+                if data_collection == 0:
+                    black,white=main.score(board)
+                    if black>white:
+                        main.number_of_win_black+=1
+                    elif black<white:
+                        main.number_of_win_white+=1
+                    elif black==white:
+                        main.Draw+=1
 
-                main.Scoreboard(main.number_of_win_black,
-                                main.number_of_win_white,
-                                main.Draw)
+                    main.Scoreboard(main.number_of_win_black,
+                                    main.number_of_win_white,
+                                    main.Draw)
+                    game_over_flag = False
 
-                if player1 == 7:
-                    if black > white:
-                        AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
-                        np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                    if player1 == 7:
+                        if black > white:
+                            AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                            np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                        else:
+                            AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                    if player2 == 7:
+                        if black > white or black == white:
+                            AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                        else:
+                            AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                            np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                else:
+                    # data collection:
+                    if times%2==0:
+                        #game_time
+                        gametime_end=time.time()
+                        sec=gametime_end-gametime_start
+                        m,s=divmod(sec,60)
+                        game_time="%02d:%02d"%(m,s)
+
+                        #move_time
+                        move_time = [black_movetime_list,white_movetime_list]
+
+                        #move_list
+                        action_list = [black_action_list,white_action_list]
+
+                        #move_list_count
+                        action_list_count = [len(black_action_list),len(white_action_list)]
+
+                        #score
+                        black,white=main.score(board)
+                        score=[black,white,abs(black-white)]
+
+                        #winner
+                        if black>white:
+                            winner = 1
+                        elif black<white:
+                            winner = -1
+                        else:
+                            winner = 0
+
+                        #board
+                        board=np.delete(board,[0,9],axis=1)
+                        board=np.delete(board,[0,9],axis=0)
+                        board[board==2] = -1
+                        board=board.flatten()
+
+                        return [list(board),game_time,move_time,action_list,action_list_count,score,winner]
                     else:
-                        AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
-                if player2 == 7:
-                    if black > white or black == white:
-                        AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
-                    else:
-                        AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
-                        np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                        #game_time
+                        gametime_end=time.time()
+                        sec=gametime_end-gametime_start
+                        m,s=divmod(sec,60)
+                        game_time="%02d:%02d"%(m,s)
 
-                game_over_flag = False
+                        #move_time
+                        move_time = [white_movetime_list,black_movetime_list]
+
+                        #move_list
+                        action_list = [white_action_list,black_action_list]
+
+                        #move_list_count
+                        action_list_count = [len(white_action_list),len(black_action_list)]
+
+                        #score
+                        black,white=main.score(board)
+                        score=[white,black,abs(black-white)]
+
+                        #winner
+                        if black>white:
+                            winner = -1
+                        elif black<white:
+                            winner = 1
+                        else:
+                            winner = 0
+
+                        #board
+                        board=np.delete(board,[0,9],axis=1)
+                        board=np.delete(board,[0,9],axis=0)
+                        board[board==2] = -1
+                        board=board.flatten()
+
+                    return [list(board),game_time,move_time,action_list,action_list_count,score,winner]
 
 
 

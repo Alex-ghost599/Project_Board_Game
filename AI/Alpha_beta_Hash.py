@@ -105,7 +105,7 @@ def move_Alpha_beta_hash(board, depth, player,info,
     # if yes, return the value
     if hash_value:
         if end:
-            print('use hash')
+            # print('use hash')
             return hash_value[1]
         else:
             return hash_value[0]
@@ -162,7 +162,7 @@ def move_Alpha_beta_hash(board, depth, player,info,
                     if 2 in kill_game_board:
                         pass
                     else:
-                        print('use kill')
+                        # print('use kill')
                         return [x,y]
                 elif player == 'white':
                     kill_game_board[x][y] = 2
@@ -171,7 +171,7 @@ def move_Alpha_beta_hash(board, depth, player,info,
                     if 1 in kill_game_board:
                         pass
                     else:
-                        print('use kill')
+                        # print('use kill')
                         return [x,y]
 
 
@@ -183,7 +183,7 @@ def move_Alpha_beta_hash(board, depth, player,info,
     set_p = set(conner) & set(possible_moves)
     if set_p:
         if end:
-            print('use conner')
+            # print('use conner')
             return random.choice(list(set_p))
 
     # main loop
