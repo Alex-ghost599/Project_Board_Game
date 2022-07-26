@@ -17,8 +17,10 @@ evaluation = [
 ]
 evaluation=np.array(evaluation)
 
+
 def move_eva(board,player,info,eva=evaluation):
     possible_moves = main.get_possible_moves(board,player,info)
+    random.shuffle(possible_moves)
     result0 = 0
     move = [None,None]
     if len(possible_moves) != 0:
@@ -29,7 +31,7 @@ def move_eva(board,player,info,eva=evaluation):
             if result0 == eva[x][y]:
                 move = [x0,y0]
             else:
-                move = move
+                move = random.choice([[x0,y0],move])
         return move
     else:
         return None,None

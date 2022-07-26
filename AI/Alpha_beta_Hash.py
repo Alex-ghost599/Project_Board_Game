@@ -8,7 +8,7 @@ import random
 import numpy as np
 
 
-path = r"AI/HASH/Alpha_beta_Hash.npy"
+path = r"D:\Durham\Project\code\AI\HASH\Alpha_beta_Hash.npy"
 hash_board_map = np.load(path, allow_pickle=True).item()
 tem_hash_board_map = deepcopy(hash_board_map)
 

@@ -14,33 +14,36 @@ import numpy as np
 # import AI_vs_AI
 import menu
 
-# parameters---------------------------------------------------------------------------------------------------------------------
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
+
+"""parameters"""
 board_size = (800,800)
 window_size = (1200,900)
 background_color = (13, 28, 45)
 cell_size = (80,80)
 pawn_size = (70,70)
 space_size = (5,5)
-fps = 60
+fps = 256
 number_of_win_black = 0
 number_of_win_white = 0
 Draw = 0
-# load image
 
-gameboard_origin = pygame.image.load("picture/board.png")
+"""load image"""
+gameboard_origin = pygame.image.load(r"D:\Durham\Project\code\picture\board.png")
 gameboard = pygame.transform.scale(gameboard_origin,board_size)
 
-gamepawn_black_origin = pygame.image.load("picture/black.png")
+gamepawn_black_origin = pygame.image.load(r"D:\Durham\Project\code\picture\black.png")
 gamepawn_black = pygame.transform.scale(gamepawn_black_origin,pawn_size)
 
-gamepawn_white_origin = pygame.image.load("picture/white.png")
+gamepawn_white_origin = pygame.image.load(r"D:\Durham\Project\code\picture\white.png")
 gamepawn_white = pygame.transform.scale(gamepawn_white_origin,pawn_size)
 
-# initialize---------------------------------------------------------------------------------------------------------------------
+"""initialize pygame"""
 pygame.init()
 Runingclock = pygame.time.Clock()
 
-#surface needed---------------------------------------------------------------------------------------------------------------------
+"""surface needed"""
 surface = pygame.display.set_mode(window_size)
 
 white = pygame.Surface(board_size)
@@ -72,11 +75,11 @@ text_resume = font_resume.render("RESUME",True,(0,0,0))
 time_show = pygame.Surface((200,50))
 time_show.fill((255,255,255))
 
-#set base surface---------------------------------------------------------------------------------------------------------------------
+"""set base surface"""
 surface.blit(white,(375,50))
 pygame.display.set_caption("Othello_lyz")
 
-# Function---------------------------------------------------------------------------------------------------------------------
+"""Othello rules Function"""
 def restnewboard():
     newboard = np.zeros((10,10))
 
@@ -161,14 +164,18 @@ def score(board):
     return black,white
 
 def gameover(board,info):
+    over = False
     if not info:
+        over = True
         return True
     game = 0
     for p in ['black','white']:
         if not check_is_any_legal_move(board,info,p):
             game += 1
     if game == 2:
+        over = True
         return True
+    return over
 
 def show_score(scoreboard,board):
     surface.blit(scoreboard,(375,350))
@@ -216,11 +223,11 @@ def Scoreboard(number_of_win_black,
     Runingclock.tick(fps)
 
 
-
+"""main loop"""
 def main():
     running = True
     while running:
-        # close window
+        """close window"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit_game()
@@ -229,7 +236,7 @@ def main():
         menu.main_menu()
 
 
-# running---------------------------------------------------------------------------------------------------------------------
+"""running main loop"""
 if __name__ == '__main__':
     main()
 

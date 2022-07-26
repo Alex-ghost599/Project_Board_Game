@@ -2,6 +2,7 @@
 #2022/5/2  18:41
 from copy import deepcopy
 
+import os
 import numpy as np
 import pygame
 import main
@@ -20,7 +21,11 @@ import AI.Alpha_beta_Hash
 import AI.MCTS
 import AI.DQN_run
 
-
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
+a_b_depth = 4
+a_b_hash_depth = 5
+hype_parameter = 3.2
 def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
     # background
     main.surface.blit(main.gameboard,(375,50))
@@ -218,7 +223,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player1 == 6:
                     black_move_time_start=time.time()
-                    x,y=AI.Alpha_beta.move_Alpha_beta(board,4,turn,info,True)
+                    x,y=AI.Alpha_beta.move_Alpha_beta(board,a_b_depth,turn,info,True)
                     black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         black_action_list.append([x,y])
@@ -230,7 +235,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player1 == 7:
                     black_move_time_start=time.time()
-                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,5,turn,info,True)
+                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,a_b_hash_depth,turn,info,True)
                     black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         black_action_list.append([x,y])
@@ -242,7 +247,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player1 == 8:
                     black_move_time_start=time.time()
-                    x,y=AI.MCTS.move_MCTS(board,turn,info)
+                    x,y=AI.MCTS.move_MCTS(board,turn,info,hype_parameter)
                     black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         black_action_list.append([x,y])
@@ -338,7 +343,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player2 == 6:
                     white_move_time_start=time.time()
-                    x,y=AI.Alpha_beta.move_Alpha_beta(board,4,turn,info,True)
+                    x,y=AI.Alpha_beta.move_Alpha_beta(board,a_b_depth,turn,info,True)
                     white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         white_action_list.append([x,y])
@@ -350,7 +355,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player2 == 8:
                     white_move_time_start=time.time()
-                    x,y=AI.MCTS.move_MCTS(board,turn,info)
+                    x,y=AI.MCTS.move_MCTS(board,turn,info,hype_parameter)
                     white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         white_action_list.append([x,y])
@@ -362,7 +367,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player2 == 7:
                     white_move_time_start=time.time()
-                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,5,turn,info,True)
+                    x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,a_b_hash_depth,turn,info,True)
                     white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         white_action_list.append([x,y])
@@ -418,18 +423,20 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                 main.Scoreboard(main.number_of_win_black,
                                 main.number_of_win_white,
                                 main.Draw)
+
                 if player1==7:
-                    if black>white:
+                    if black-white>10:
                         AI.Alpha_beta_Hash.hash_board_map=deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
                         np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
                     else:
                         AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
                 if player2==7:
-                    if white>black:
-                        AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
-                    else:
+                    if white-black>10:
                         AI.Alpha_beta_Hash.hash_board_map=deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
                         np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                    else:
+                        AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+
                 # black_rect = main.surface.blit(main.winnerboard_b,(50,600))
                 # draw_rect = main.surface.blit(main.winnerboard_d,(170,600))
                 # white_rect = main.surface.blit(main.winnerboard_w,(290,600))
@@ -470,6 +477,19 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                     time_text_rect.center = time_rect.center
                     main.surface.blit(time_text,(time_text_rect))
 
+                    if player1 == 7:
+                        if black - white > 10:
+                            AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                            np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                        else:
+                            AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                    if player2 == 7:
+                        if white - black > 10:
+                            AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                            np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                        else:
+                            AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+
                     pygame.display.update()
                     main.Runingclock.tick(main.fps)
 
@@ -490,17 +510,17 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                     game_over_flag = False
 
                     if player1 == 7:
-                        if black > white:
+                        if black - white > 10:
                             AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
                             np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
                         else:
                             AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
                     if player2 == 7:
-                        if black > white or black == white:
-                            AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
-                        else:
+                        if white - black > 10:
                             AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
                             np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                        else:
+                            AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
                 else:
                     # data collection:
                     if times%2==0:
@@ -537,6 +557,19 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                         board[board==2] = -1
                         board=board.flatten()
 
+                        if player1==7:
+                            if black-white>10:
+                                AI.Alpha_beta_Hash.hash_board_map=deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                                np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                            else:
+                                AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                        if player2==7:
+                            if white-black>10:
+                                AI.Alpha_beta_Hash.hash_board_map=deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                                np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                            else:
+                                AI.Alpha_beta_Hash.tem_hash_board_map=deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+
                         return [list(board),game_time,move_time,action_list,action_list_count,score,winner]
                     else:
                         #game_time
@@ -572,7 +605,20 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                         board[board==2] = -1
                         board=board.flatten()
 
-                    return [list(board),game_time,move_time,action_list,action_list_count,score,winner]
+                        if player1 == 7:
+                            if black - white > 10:
+                                AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                                np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                            else:
+                                AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+                        if player2 == 7:
+                            if white - black > 10:
+                                AI.Alpha_beta_Hash.hash_board_map = deepcopy(AI.Alpha_beta_Hash.tem_hash_board_map)
+                                np.save(AI.Alpha_beta_Hash.path,AI.Alpha_beta_Hash.hash_board_map)
+                            else:
+                                AI.Alpha_beta_Hash.tem_hash_board_map = deepcopy(AI.Alpha_beta_Hash.hash_board_map)
+
+                        return [list(board),game_time,move_time,action_list,action_list_count,score,winner]
 
 
 

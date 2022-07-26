@@ -3,6 +3,10 @@
 
 import numpy as np
 import random
+import os
+import sys
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 
 class Game(object):
     def __init__(self):
@@ -18,13 +22,6 @@ class Game(object):
             for y in range(0,8):
                 if [x,y] not in [[3,3],[3,4],[4,3],[4,4]]:
                     self.info.append([x,y])
-
-
-        # # 更新期盘：1表示黑棋，-1表示白棋
-        # for item in self.black_chess:
-        #     self.board[item[0]][item[1]] = 1
-        # for item in self.white_chess:
-        #     self.board[item[0]][item[1]] = -1
 
     def gameover(self):
         if not self.info:
@@ -113,22 +110,38 @@ class Game(object):
         random.shuffle(possible_moves)
         return possible_moves
 
-    def Move(self,action,player):
-        action = [action//8, action%8]
-        x,y=action
-        if [x,y] != [8,0]:
-            if player=='black':
-                self.board[x][y] = 1
-                self.info.remove([x,y])
-                for i,j in self.flip_pawn(player,x,y):
-                    self.board[i][j] = 1
+    def Move(self,action,player,dqn=1):
+        if dqn == 1:
+            action = [action//8, action%8]
+            x,y=action
+            if [x,y] != [8,0]:
+                if player=='black':
+                    self.board[x][y] = 1
+                    self.info.remove([x,y])
+                    for i,j in self.flip_pawn(player,x,y):
+                        self.board[i][j] = 1
+                else:
+                    self.board[x][y] = -1
+                    self.info.remove([x,y])
+                    for i,j in self.flip_pawn(player,x,y):
+                        self.board[i][j] = -1
             else:
-                self.board[x][y] = -1
-                self.info.remove([x,y])
-                for i,j in self.flip_pawn(player,x,y):
-                    self.board[i][j] = -1
+                pass
         else:
-            pass
+            x,y=action
+            if [x,y]!=[8,0]:
+                if player=='black':
+                    self.board[x][y]=1
+                    self.info.remove([x,y])
+                    for i,j in self.flip_pawn(player,x,y):
+                        self.board[i][j]=1
+                else:
+                    self.board[x][y]=-1
+                    self.info.remove([x,y])
+                    for i,j in self.flip_pawn(player,x,y):
+                        self.board[i][j]=-1
+            else:
+                pass
 
     def Get_State(self):
         return self.board.flatten()

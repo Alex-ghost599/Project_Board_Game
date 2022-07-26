@@ -7,7 +7,9 @@
 # import numpy as np
 # import torch
 # import torch.nn
-# from AI.DQN.DQN_train_2 import NET,DQN
+# # from AI.DQN.DQN_train import DQN
+# # from AI.DQN.DQN_train_2 import DQN
+# from AI.DQN.DQN_train_3 import DQN
 # from AI.DQN.game_train import Game
 # import main
 #

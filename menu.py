@@ -2,6 +2,7 @@
 #2022/5/2  4:30
 import datetime
 import os
+import sys
 import pandas as pd
 import numpy as np
 import pygame
@@ -12,6 +13,8 @@ import P_vs_P
 import P_vs_AI as pai
 import AI_vs_AI as aiai
 
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 
 def mkdir(path):
     folder = os.path.exists(path)

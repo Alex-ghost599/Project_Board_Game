@@ -17,7 +17,9 @@ import AI.Alpha_beta_Hash
 import AI.MCTS
 import AI.DQN_run
 
-
+a_b_depth = 4
+a_b_hash_depth = 5
+hype_parameter = 3.2
 def pvsai(player1,player2):
     #set human player
     human = True
@@ -195,7 +197,7 @@ def pvsai(player1,player2):
                             turn='white'
                             break
                     elif player1==6:
-                        x,y=AI.Alpha_beta.move_Alpha_beta(board,3,turn,info,True)
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,a_b_depth,turn,info,True)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
                             info.remove([x,y])
@@ -204,7 +206,7 @@ def pvsai(player1,player2):
                             turn='white'
                             break
                     elif player1==7:
-                        x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,3,turn,info,True)
+                        x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,a_b_hash_depth,turn,info,True)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
                             info.remove([x,y])
@@ -213,7 +215,7 @@ def pvsai(player1,player2):
                             turn='white'
                             break
                     elif player1==8:
-                        x,y=AI.MCTS.move_MCTS(board,turn,info)
+                        x,y=AI.MCTS.move_MCTS(board,turn,info,hype_parameter)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
                             info.remove([x,y])
@@ -300,7 +302,7 @@ def pvsai(player1,player2):
                             turn='black'
                             break
                     elif player2==6:
-                        x,y=AI.Alpha_beta.move_Alpha_beta(board,3,turn,info,True)
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,a_b_depth,turn,info,True)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])
@@ -309,7 +311,7 @@ def pvsai(player1,player2):
                             turn='black'
                             break
                     elif player2==7:
-                        x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,3,turn,info,True)
+                        x,y=AI.Alpha_beta_Hash.move_Alpha_beta_hash(board,a_b_hash_depth,turn,info,True)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])
@@ -318,7 +320,7 @@ def pvsai(player1,player2):
                             turn='black'
                             break
                     elif player2==8:
-                        x,y=AI.MCTS.move_MCTS(board,turn,info)
+                        x,y=AI.MCTS.move_MCTS(board,turn,info,hype_parameter)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])
