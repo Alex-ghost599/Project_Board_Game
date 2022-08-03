@@ -363,7 +363,7 @@ def simulation(node,eva=evaluation):
 
 
 """main function"""
-def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter=100):
+def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter=1000):
     """restore input data"""
     board = deepcopy(in_board)
     player = deepcopy(in_player)
@@ -551,13 +551,14 @@ def mkcsv(path,data):
 
 dirpath = 'D:\\Durham\\Project\\code\\AI\\MCTS_HP_TEST_DATA'
 csv_path = dirpath + '\\MCTS_HP_TEST_DATA' + '_100_' +\
-                      str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")) + '.csv'
+                      str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")) + '.csv'
 """loop HP"""
-# aaa = list(np.arange(1,100,0.1))
+# aaa = list(np.arange(3.5,4,0.1))
 # hype_parameter_list = []
 # for iii in aaa:
 #     hype_parameter_list.append(round(iii,1))
-hype_parameter_list = [3.2]
+#     0.6,0.8,2.4,2.7,3.8
+hype_parameter_list = [3.8]
 """test"""
 for temp_HP in hype_parameter_list:
     print('HP:',temp_HP)
@@ -566,7 +567,7 @@ for temp_HP in hype_parameter_list:
     MCTS_win=0
     MCTS_lose=0
     Draw=0
-    for iiiii in range(100):
+    for iiiii in range(1000):
         print('Test round:',iiiii)
         print('MCTS_Win:',MCTS_win,'MCTS_Lose:',MCTS_lose,'Draw:',Draw)
         """set game"""

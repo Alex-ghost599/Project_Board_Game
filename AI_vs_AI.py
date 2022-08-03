@@ -25,7 +25,7 @@ BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 sys.path.append(BASE_DIR)
 a_b_depth = 4
 a_b_hash_depth = 5
-hype_parameter = 3.2
+hype_parameter = 2.7
 def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
     # background
     main.surface.blit(main.gameboard,(375,50))

@@ -14,10 +14,10 @@ evaluation=[
         [0,0,0,0,0,0,0,0,0,0],
         [0,5,1,3,3,3,3,1,5,0],
         [0,1,1,2,2,2,2,1,1,0],
-        [0,3,2,4,4,4,4,2,3,0],
-        [0,3,2,4,1,1,4,2,3,0],
-        [0,3,2,4,1,1,4,2,3,0],
-        [0,3,2,4,4,4,4,2,3,0],
+        [0,3,2,3,4,4,3,2,3,0],
+        [0,3,2,4,5,5,4,2,3,0],
+        [0,3,2,4,5,5,4,2,3,0],
+        [0,3,2,3,4,4,3,2,3,0],
         [0,1,1,2,2,2,2,1,2,0],
         [0,5,1,3,3,3,3,1,5,0],
         [0,0,0,0,0,0,0,0,0,0],
@@ -235,7 +235,7 @@ def simulation(node,eva=evaluation):
 
 
 """main function"""
-def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter=100):
+def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter=1000):
     """restore input data"""
     board = deepcopy(in_board)
     player = deepcopy(in_player)

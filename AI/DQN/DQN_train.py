@@ -55,7 +55,7 @@ class NET(nn.Module):
         super(NET, self).__init__()
 
         self.linear1 = nn.Sequential(
-            nn.Linear(N_STATE, 64),
+            nn.Linear(N_STATE, 256),
             nn.LeakyReLU()
         )
         # self.linear1.weight.data.normal_(0, 0.1)
@@ -71,41 +71,41 @@ class NET(nn.Module):
         )
 
         self.conv3 = nn.Sequential(
-            nn.Conv1d(8, 8, 3, 1, 1),
+            nn.Conv1d(8, 16, 3, 1, 1),
             nn.LeakyReLU()
         )
 
         self.conv4 = nn.Sequential(
-            nn.Conv1d(8, 8, 3, 1, 1),
+            nn.Conv1d(16, 32, 3, 1, 1),
             nn.LeakyReLU()
         )
 
         self.conv5 = nn.Sequential(
-            nn.Conv1d(8, 8, 3, 1, 1),
+            nn.Conv1d(32, 64, 3, 1, 1),
             nn.LeakyReLU()
         )
 
         self.conv6 = nn.Sequential(
-            nn.Conv1d(8, 8, 3, 1, 1),
+            nn.Conv1d(64, 32, 3, 1, 1),
             nn.LeakyReLU()
         )
 
         self.linear2_val = nn.Sequential(
-            nn.Linear(8 * 64, 64),
+            nn.Linear(32 * 256, 128),
             nn.LeakyReLU()
         )
 
         self.linear2_adv = nn.Sequential(
-            nn.Linear(8 * 64, 64),
+            nn.Linear(32 * 256, 128),
             nn.LeakyReLU()
         )
 
         self.linear3_adv = nn.Sequential(
-            nn.Linear(64, N_ACTION)
+            nn.Linear(128, N_ACTION)
         )
 
         self.linear3_val = nn.Sequential(
-            nn.Linear(64, 1)
+            nn.Linear(128, 1)
         )
 
     def forward(self, x):
