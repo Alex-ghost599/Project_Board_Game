@@ -159,28 +159,13 @@ class Node:
 
 
 """get moves in simulation"""
-def move_eva(board,player,info,eva=evaluation):
+def move_random(board,player,info):
     """get moves"""
     possible_moves = main.get_possible_moves(board,player,info)
-    result0 = 0
-    move = [None,None]
-    """choose a move based on the evaluation matrix"""
-    if len(possible_moves) != 0:
-        for [x,y] in possible_moves:
-            result0 = max(result0,eva[x][y])
-            if result0 == eva[x][y]:
-                move = [x,y]
-            else:
-                move = random.choice([[x,y],move])
-                # flag = random.random()
-                # if flag < 0.5:
-                #     move = [x,y]
-                # else:
-                #     move = move
-
-        return move
+    if len(possible_moves) == 0:
+        return None, None
     else:
-        return None,None
+        return random.choice(possible_moves)
 
 
 """simulation state"""
@@ -198,7 +183,7 @@ def simulation(node,eva=evaluation):
         player = 'white'
     """play a game until the end"""
     while not main.gameover(board,info):
-        x,y = move_eva(board,player,info,eva)
+        x,y = move_random(board,player,info)
         if [x,y]!=[None,None]:
             if player == 'black':
                 board[x][y] = 1
@@ -235,7 +220,7 @@ def simulation(node,eva=evaluation):
 
 
 """main function"""
-def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter=1000):
+def move_RMCTS(in_board,in_player,in_info,hype_parameter,max_iter=1000):
     """restore input data"""
     board = deepcopy(in_board)
     player = deepcopy(in_player)

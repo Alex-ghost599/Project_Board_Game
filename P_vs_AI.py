@@ -14,7 +14,8 @@ import AI.Score_min
 import AI.MiniMax
 import AI.Alpha_beta
 import AI.Alpha_beta_Hash
-import AI.MCTS
+import AI.MCTS_Roxanne
+import AI.MCTS_random
 import AI.DQN_run
 
 a_b_depth = 4
@@ -215,7 +216,16 @@ def pvsai(player1,player2):
                             turn='white'
                             break
                     elif player1==8:
-                        x,y=AI.MCTS.move_MCTS(board,turn,info,hype_parameter)
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player1==9:
+                        x,y=AI.MCTS_random.move_RMCTS(board,turn,info,hype_parameter)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
                             info.remove([x,y])
@@ -224,7 +234,7 @@ def pvsai(player1,player2):
                             turn='white'
                             break
 
-                    elif player2==9:
+                    elif player2==10:
                         x,y=AI.DQN_run.DQN_move(board,turn,info)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
@@ -320,7 +330,16 @@ def pvsai(player1,player2):
                             turn='black'
                             break
                     elif player2==8:
-                        x,y=AI.MCTS.move_MCTS(board,turn,info,hype_parameter)
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==9:
+                        x,y=AI.MCTS_random.move_RMCTS(board,turn,info,hype_parameter)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])
@@ -329,7 +348,7 @@ def pvsai(player1,player2):
                             turn='black'
                             break
 
-                    elif player2==9:
+                    elif player2==10:
                         x,y=AI.DQN_run.DQN_move(board,turn,info)
                         if [x,y]!=[None,None]:
                             board[x][y]=2

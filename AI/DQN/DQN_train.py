@@ -20,23 +20,23 @@ N_STATE = pow(BOARD_SIZE, 2)        # 1*64，表示棋盘
 N_ACTION = pow(BOARD_SIZE, 2) + 1   # 1*65，表示动作（包括没有可下的位置）
 
 LR = 0.001
-EPISODE = 100000
+EPISODE = 40000
 BATCH_SIZE = 32
-GAMMA = 0.7
-# ALPHA = 0.8
-TRANSITIONS_CAPACITY = 1000
+GAMMA = 0.9
+ALPHA = 0.9
+TRANSITIONS_CAPACITY = 200
 UPDATE_DELAY = 10
 
-evaluation = [
-    [120,2,20,10,10,20,2,120],
-    [2,1,3,3,3,3,1,2],
-    [20,3,15,5,5,15,3,20],
-    [10,3,5,5,5,5,3,10],
-    [10,3,5,5,5,5,3,10],
-    [20,3,15,5,5,15,3,20],
-    [2,1,3,3,3,3,1,2],
-    [120,2,20,10,10,20,2,120]
-]
+evaluation=[
+        [5,1,3,3,3,3,1,5],
+        [1,1,2,2,2,2,1,1],
+        [3,2,3,4,4,3,2,3],
+        [3,2,4,5,5,4,2,3],
+        [3,2,4,5,5,4,2,3],
+        [3,2,3,4,4,3,2,3],
+        [1,1,2,2,2,2,1,2],
+        [5,1,3,3,3,3,1,5],
+    ]
 evaluation=np.array(evaluation)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -239,8 +239,8 @@ class DQN(object):
                                              batch_a)  # gather figure out which action actually is chosen 相当于从第一维取第batch_a位置的值
             batch_y_ = oppo_Q_(
                 batch_s_).detach()  # detach return a new Variable which do not have gradient detach就是禁止梯度更新，这些图变量包含了梯度，在计算loss的时候会更新，因为Q_不用更新，因此禁止梯度。
-            batch_y_ = batch_r - GAMMA * torch.max(batch_y_, 1)[0].view(-1,
-                                                                        1)  # max(1) return (value,index) for each row
+            batch_y_ = ALPHA * (batch_r + GAMMA * torch.max(batch_y_, 1)[0].view(-1,
+                                                                        1))  # max(1) return (value,index) for each row
 
             loss = self.criteria(batch_y, batch_y_)
             self.optimizer.zero_grad()
@@ -250,6 +250,7 @@ class DQN(object):
 
 def move_eva(game,player,eva=evaluation):
     possible_moves = game.get_possible_moves(player)
+    random.shuffle(possible_moves)
     result0 = 0
     move = [None,None]
     if len(possible_moves) != 0:
@@ -258,8 +259,10 @@ def move_eva(game,player,eva=evaluation):
             if result0 == eva[x][y]:
                 move = [x,y]
             else:
-                move = random.choice([[x,y],move])
+                # move = random.choice([[x,y],move])
+                move = move
         return move
+
     else:
         # pass
         return print('something wrong')

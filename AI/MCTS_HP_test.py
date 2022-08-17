@@ -299,7 +299,8 @@ def move_eva(board,player,info,eva=evaluation):
             if result0 == eva[x][y]:
                 move = [x,y]
             else:
-                move = random.choice([[x,y],move])
+                # move = random.choice([[x,y],move])
+                move = move
                 # flag = random.random()
                 # if flag < 0.5:
                 #     move = [x,y]
@@ -550,15 +551,15 @@ def mkcsv(path,data):
         df.to_csv(path,index=False,mode='a',header=False)
 
 dirpath = 'D:\\Durham\\Project\\code\\AI\\MCTS_HP_TEST_DATA'
-csv_path = dirpath + '\\MCTS_HP_TEST_DATA' + '_100_' +\
+csv_path = dirpath + '\\MCTS_HP_TEST_DATA' + '_500_' +\
                       str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")) + '.csv'
 """loop HP"""
 # aaa = list(np.arange(3.5,4,0.1))
 # hype_parameter_list = []
 # for iii in aaa:
 #     hype_parameter_list.append(round(iii,1))
-#     0.6,0.8,2.4,2.7,3.8
-hype_parameter_list = [3.8]
+#     0.4,2.3,3.3,4.4
+hype_parameter_list = [4.4]
 """test"""
 for temp_HP in hype_parameter_list:
     print('HP:',temp_HP)

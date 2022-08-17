@@ -10,8 +10,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 # from reverse import *
-import game_train as gt
-
+# import game_train as gt
+from AI.DQN import game_train as gt
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(BASE_DIR)
 
@@ -23,7 +23,7 @@ LR = 0.001
 EPISODE = 100000
 BATCH_SIZE = 32
 GAMMA = 0.7
-# ALPHA = 0.8
+ALPHA = 0.8
 TRANSITIONS_CAPACITY = 5000
 UPDATE_DELAY = 10
 
@@ -55,7 +55,7 @@ class NET(nn.Module):
         super(NET, self).__init__()
 
         self.linear1 = nn.Sequential(
-            nn.Linear(N_STATE, 64),
+            nn.Linear(N_STATE, 128),
             nn.LeakyReLU()
         )
         # self.linear1.weight.data.normal_(0, 0.1)
@@ -75,37 +75,22 @@ class NET(nn.Module):
             nn.LeakyReLU()
         )
 
-        self.conv4 = nn.Sequential(
-            nn.Conv1d(16, 16, 3, 1, 1),
-            nn.LeakyReLU()
-        )
-
-        self.conv5 = nn.Sequential(
-            nn.Conv1d(16, 16, 3, 1, 1),
-            nn.LeakyReLU()
-        )
-
-        self.conv6 = nn.Sequential(
-            nn.Conv1d(16, 16, 3, 1, 1),
-            nn.LeakyReLU()
-        )
-
         self.linear2_val = nn.Sequential(
-            nn.Linear(16 * 64, 128),
+            nn.Linear(16 * 128, 512),
             nn.LeakyReLU()
         )
 
         self.linear2_adv = nn.Sequential(
-            nn.Linear(16 * 64, 128),
+            nn.Linear(16 * 128, 512),
             nn.LeakyReLU()
         )
 
         self.linear3_adv = nn.Sequential(
-            nn.Linear(128, N_ACTION)
+            nn.Linear(512, N_ACTION)
         )
 
         self.linear3_val = nn.Sequential(
-            nn.Linear(128, 1)
+            nn.Linear(512, 1)
         )
 
     def forward(self, x):
@@ -114,9 +99,6 @@ class NET(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
-        x = self.conv4(x)
-        x = self.conv5(x)
-        x = self.conv6(x)
         # x = x.flatten()
         x = x.view(x.shape[0], -1)
         # x = self.linear2(x)
@@ -148,12 +130,12 @@ class DQN(object):
         # ??
         if color == 1:
             # pass
-            # self.Q.load_state_dict(torch.load('data/216000_dueling_offensive.pth', map_location='cpu'))
-            self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\model_offensive_2.pth'))
+            self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\216000_dueling_offensive.pth', map_location='cpu'))
+            # self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\model_offensive_2.pth'))
         elif color == -1:
             # pass
-            # self.Q.load_state_dict(torch.load('data/216000_dueling_defensive.pth', map_location='cpu'))
-            self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\model_defensive_2.pth'))
+            self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\216000_dueling_defensive.pth', map_location='cpu'))
+            # self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\model_defensive_2.pth'))
 
         self.optimizer = torch.optim.Adam(self.Q.parameters(), lr=LR)
         self.criteria = nn.MSELoss().to(device)
@@ -237,8 +219,8 @@ class DQN(object):
                                              batch_a)  # gather figure out which action actually is chosen 相当于从第一维取第batch_a位置的值
             batch_y_ = oppo_Q_(
                 batch_s_).detach()  # detach return a new Variable which do not have gradient detach就是禁止梯度更新，这些图变量包含了梯度，在计算loss的时候会更新，因为Q_不用更新，因此禁止梯度。
-            batch_y_ = batch_r - GAMMA * torch.max(batch_y_, 1)[0].view(-1,
-                                                                        1)  # max(1) return (value,index) for each row
+            batch_y_ = ALPHA * (batch_r - GAMMA * torch.max(batch_y_, 1)[0].view(-1,
+                                                                        1))  # max(1) return (value,index) for each row
 
             loss = self.criteria(batch_y, batch_y_)
             self.optimizer.zero_grad()
