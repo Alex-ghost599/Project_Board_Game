@@ -89,13 +89,76 @@ def evaluate(board,player,info,eva=evaluation):
                 corner += board[corner_i+(2*dx)][corner_j+(2*dy)]*-15
 
     corner = corner * 0.25
-
+    # """using evaluation matrix(black want positive_big, white want negative_small)"""
+    # x=deepcopy(board)
+    # x[x==2]=-1
+    # xe=eva*x
+    # score=xe.sum()*0.20
+    #
+    # """using mobility of opposite player(less mobility, more score)"""
+    # if player=='black':
+    #     mobility=-15*len(main.get_possible_moves(board,'white',info))
+    # else:
+    #     mobility=15*len(main.get_possible_moves(board,'black',info))
+    # mobility=mobility*0.3
+    #
+    # """
+    # using the number of pieces of opposite player
+    # (more pieces, more score) for fist 42 steps
+    # (less pieces, more score) for last 18 steps
+    # """
+    # number=0
+    # b,w=main.score(board)
+    # if len(info)>18:
+    #     if player=='black':
+    #         number=(b-w)*-12
+    #     elif player=='white':
+    #         number=(w-b)*12
+    # elif len(info)<=18:
+    #     if player=='black':
+    #         number=(b-w)*12
+    #     elif player=='white':
+    #         number=(w-b)*-12
+    # number=number*0.25
+    #
+    # """using the number of pieces at corner and near corner"""
+    # corner=0
+    # cor_map=[[1,1,1,1],
+    #          [1,8,1,-1],
+    #          [8,1,-1,1],
+    #          [8,8,-1,-1]]
+    # for corner_i,corner_j,dx,dy in cor_map:
+    #     if board[corner_i][corner_j]==1:
+    #         corner=corner+10
+    #     elif board[corner_i][corner_j]==-1:
+    #         corner=corner-10
+    #     elif board[corner_i][corner_j]==0:
+    #         if player=='black':
+    #             corner+=board[corner_i][corner_j+dy]*-10
+    #             corner+=board[corner_i+dx][corner_j]*-10
+    #             corner+=board[corner_i+dx][corner_j+dy]*-15
+    #
+    #             corner+=board[corner_i][corner_j+(2*dy)]*10
+    #             corner+=board[corner_i+dx][corner_j+(2*dy)]*10
+    #             corner+=board[corner_i+(2*dx)][corner_j]*10
+    #             corner+=board[corner_i+(2*dx)][corner_j+dy]*10
+    #             corner+=board[corner_i+(2*dx)][corner_j+(2*dy)]*15
+    #         elif player=='white':
+    #             corner+=board[corner_i][corner_j+dy]*10
+    #             corner+=board[corner_i+dx][corner_j]*10
+    #             corner+=board[corner_i+dx][corner_j+dy]*15
+    #
+    #             corner+=board[corner_i][corner_j+(2*dy)]*-10
+    #             corner+=board[corner_i+dx][corner_j+(2*dy)]*-10
+    #             corner+=board[corner_i+(2*dx)][corner_j]*-10
+    #             corner+=board[corner_i+(2*dx)][corner_j+dy]*-10
+    #             corner+=board[corner_i+(2*dx)][corner_j+(2*dy)]*-15
+    #
+    # corner=corner*0.25
     """return value between 0 and 1"""
     z = score + mobility + number + corner
 
     z = 1.0/(1.0+math.exp(-z))
-
-
 
     return z
 
@@ -235,7 +298,7 @@ def simulation(node,eva=evaluation):
 
 
 """main function"""
-def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter=1000):
+def move_MCTS(in_board,in_player,in_info,hype_parameter,max_iter):
     """restore input data"""
     board = deepcopy(in_board)
     player = deepcopy(in_player)

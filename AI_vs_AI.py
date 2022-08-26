@@ -27,6 +27,7 @@ sys.path.append(BASE_DIR)
 a_b_depth = 4
 a_b_hash_depth = 5
 hype_parameter = 0.4
+max_iter=1000
 def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
     # background
     main.surface.blit(main.gameboard,(375,50))
@@ -248,7 +249,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player1 == 8:
                     black_move_time_start=time.time()
-                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter)
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,max_iter)
                     black_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         black_action_list.append([x,y])
@@ -370,6 +371,72 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                         for i,j in main.flip_pawn(board,turn,x,y):
                             board[i][j]=1
                         turn='white'
+                elif player1 == 19:
+                    black_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,50)
+                    black_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+                elif player1 == 20:
+                    black_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,100)
+                    black_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+                elif player1 == 21:
+                    black_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,200)
+                    black_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+                elif player1 == 22:
+                    black_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,500)
+                    black_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+                elif player1 == 23:
+                    black_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,300)
+                    black_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
+                elif player1 == 24:
+                    black_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,400)
+                    black_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        black_action_list.append([x,y])
+                        board[x][y]=1
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=1
+                        turn='white'
 
 
                 black_move_time_s = str(black_move_time_end - black_move_time_start)
@@ -470,7 +537,7 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
 
                 elif player2 == 8:
                     white_move_time_start=time.time()
-                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter)
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,max_iter)
                     white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         white_action_list.append([x,y])
@@ -584,6 +651,72 @@ def aivsai(player1,player2,number_of_rounds,data_collection,times=None):
                 elif player2 == 18:
                     white_move_time_start=time.time()
                     x,y=AI.Alpha_beta.move_Alpha_beta(board,5,turn,info,True)
+                    white_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+                elif player2 == 19:
+                    white_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,50)
+                    white_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+                elif player2 == 20:
+                    white_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,100)
+                    white_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+                elif player2 == 21:
+                    white_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,200)
+                    white_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+                elif player2 == 22:
+                    white_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,500)
+                    white_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+                elif player2 == 23:
+                    white_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,300)
+                    white_move_time_end=time.time()
+                    if [x,y]!=[None,None]:
+                        white_action_list.append([x,y])
+                        board[x][y]=2
+                        info.remove([x,y])
+                        for i,j in main.flip_pawn(board,turn,x,y):
+                            board[i][j]=2
+                        turn='black'
+                elif player2 == 24:
+                    white_move_time_start=time.time()
+                    x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,400)
                     white_move_time_end=time.time()
                     if [x,y]!=[None,None]:
                         white_action_list.append([x,y])

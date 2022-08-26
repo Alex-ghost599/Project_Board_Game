@@ -23,7 +23,15 @@ evaluation = [
 ]
 evaluation=np.array(evaluation)
 
-def evaluate(board,player,info,eva=evaluation):
+def evaluate(board,player,info,d,eva=evaluation):
+    if d%2==0:
+        pass
+    else:
+        if player=='black':
+            player='white'
+        else:
+            player='black'
+
     """using evaluation matrix(black want positive_big, white want negative_small)"""
     x = deepcopy(board)
     x[x == 2] = -1
@@ -35,7 +43,7 @@ def evaluate(board,player,info,eva=evaluation):
         mobility = -15 * len(main.get_possible_moves(board,'white',info))
     else:
         mobility = 15 * len(main.get_possible_moves(board,'black',info))
-    mobility = mobility * 0.25
+    mobility = mobility * 0.3
 
     """
     using the number of pieces of opposite player
@@ -54,7 +62,7 @@ def evaluate(board,player,info,eva=evaluation):
             number = (b-w) * 12
         elif player == 'white':
             number = (w-b) * -12
-    number = number * 0.3
+    number = number * 0.25
 
     """using the number of pieces at corner and near corner"""
     corner = 0
@@ -94,7 +102,9 @@ def evaluate(board,player,info,eva=evaluation):
 
 """main function"""
 def move_Alpha_beta(board, depth, player,info,
-                    end:bool,x=None,y=None,alpha=-99999999,beta=99999999,eva=evaluation):
+                    end:bool,x=None,y=None,alpha=-99999999,beta=99999999,eva=evaluation,d=None):
+    if end:
+        d = depth
     """set temporary game board and info"""
     tem0_board = deepcopy(board)
     tem0_info = deepcopy(info)
@@ -116,7 +126,7 @@ def move_Alpha_beta(board, depth, player,info,
     if depth == 0 or main.gameover(tem0_board, tem0_info):
 
         # print(evaluate(tem0_board),player,'0')
-        return evaluate(tem0_board,player,info)
+        return evaluate(tem0_board,player,info,d)
 
     """get all possible"""
     tem_possible_moves = main.get_possible_moves(tem0_board,player,tem0_info)
@@ -199,7 +209,7 @@ def move_Alpha_beta(board, depth, player,info,
             score= -99999
             for [x, y] in possible_moves:
                 # print('thinking',x,y)
-                tem_score = move_Alpha_beta(tem0_board,depth,'white',tem0_info,False,x,y,alpha,beta)
+                tem_score = move_Alpha_beta(tem0_board,depth,'white',tem0_info,False,x,y,alpha,beta,d=d)
                 # print(tem_score)
 
                 score = max(score,tem_score)
@@ -225,7 +235,7 @@ def move_Alpha_beta(board, depth, player,info,
             score = 99999
             for [x, y] in possible_moves:
                 # print('thinking',x,y)
-                tem_score = move_Alpha_beta(tem0_board,depth,'black',tem0_info,False,x,y,alpha,beta)
+                tem_score = move_Alpha_beta(tem0_board,depth,'black',tem0_info,False,x,y,alpha,beta,d=d)
                 # print(tem_score)
                 # print(score)
                 score = min(score,tem_score)

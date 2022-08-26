@@ -20,7 +20,8 @@ import AI.DQN_run
 
 a_b_depth = 4
 a_b_hash_depth = 5
-hype_parameter = 3.2
+hype_parameter = 0.4
+max_iter = 1000
 def pvsai(player1,player2):
     #set human player
     human = True
@@ -216,7 +217,7 @@ def pvsai(player1,player2):
                             turn='white'
                             break
                     elif player1==8:
-                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter)
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,max_iter)
                         if [x,y]!=[None,None]:
                             board[x][y]=1
                             info.remove([x,y])
@@ -243,6 +244,133 @@ def pvsai(player1,player2):
                                 board[i][j]=1
                             turn='white'
                             break
+                    elif player2==11:
+                        x,y=AI.MiniMax.move_minimax(board,1,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==12:
+                        x,y=AI.MiniMax.move_minimax(board,2,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==13:
+                        x,y=AI.MiniMax.move_minimax(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==14:
+                        x,y=AI.MiniMax.move_minimax(board,5,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==15:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,1,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==16:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,2,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==17:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==18:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,5,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==19:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,50)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==20:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,100)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==21:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,200)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==22:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,500)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==23:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,300)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+                    elif player2==24:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,400)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=1
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=1
+                            turn='white'
+                            break
+
 
 
                 #for white
@@ -330,7 +458,7 @@ def pvsai(player1,player2):
                             turn='black'
                             break
                     elif player2==8:
-                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter)
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,max_iter)
                         if [x,y]!=[None,None]:
                             board[x][y]=2
                             info.remove([x,y])
@@ -357,6 +485,133 @@ def pvsai(player1,player2):
                                 board[i][j]=2
                             turn='black'
                             break
+                    elif player2==11:
+                        x,y=AI.MiniMax.move_minimax(board,1,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==12:
+                        x,y=AI.MiniMax.move_minimax(board,2,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==13:
+                        x,y=AI.MiniMax.move_minimax(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==14:
+                        x,y=AI.MiniMax.move_minimax(board,5,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==15:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,1,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==16:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,2,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==17:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,3,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==18:
+                        x,y=AI.Alpha_beta.move_Alpha_beta(board,5,turn,info,True)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==19:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,50)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==20:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,100)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==21:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,200)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==22:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,500)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==23:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,300)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+                    elif player2==24:
+                        x,y=AI.MCTS_Roxanne.move_MCTS(board,turn,info,hype_parameter,400)
+                        if [x,y]!=[None,None]:
+                            board[x][y]=2
+                            info.remove([x,y])
+                            for i,j in main.flip_pawn(board,turn,x,y):
+                                board[i][j]=2
+                            turn='black'
+                            break
+
 
 
                 #check is there any legal move for both player

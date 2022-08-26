@@ -136,7 +136,13 @@ def main_menu():
                ('AI(Alpha_Beta_1)',15),
                ('AI(Alpha_Beta_2)',16),
                ('AI(Alpha_Beta_3)',17),
-               ('AI(Alpha_Beta_5)',18)],
+               ('AI(Alpha_Beta_5)',18),
+               ('AI(MCTS_50)',19),
+               ('AI(MCTS_100)',20),
+               ('AI(MCTS_200)',21),
+               ('AI(MCTS_500)',22),
+               ('AI(MCTS_300)',23),
+               ('AI(MCTS_400)',24)],
         dropselect_id='Player_1',
         font_size=16,
         onchange=onchange_dropselect,
@@ -180,7 +186,13 @@ def main_menu():
                ('AI(Alpha_Beta_1)',15),
                ('AI(Alpha_Beta_2)',16),
                ('AI(Alpha_Beta_3)',17),
-               ('AI(Alpha_Beta_5)',18)],
+               ('AI(Alpha_Beta_5)',18),
+               ('AI(MCTS_50)',19),
+               ('AI(MCTS_100)',20),
+               ('AI(MCTS_200)',21),
+               ('AI(MCTS_500)',22),
+               ('AI(MCTS_300)',23),
+               ('AI(MCTS_400)',24)],
         dropselect_id='Player_2',
         font_size=16,
         onchange=onchange_dropselect,
@@ -326,7 +338,7 @@ def main_menu():
             if data_collection == 0:
                 aiai.aivsai(player1,player2,number_of_rounds,data_collection)
             else:
-                times = 1000
+                times = 200
                 # game_data = []
                 game_csv_path = data_path + '\\' +\
                       player1_name + '_VS_' + player2_name + '_' +\
@@ -339,6 +351,7 @@ def main_menu():
                         # print(game_data)
                         mkcsv(game_csv_path,game_data)
                         # print(game_csv_path)
+                    main.exit_game()
 
     start = menu.add.button(
         'Start',

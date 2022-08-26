@@ -9,20 +9,29 @@ import os,glob
 """4 agent"""
 alpha_agent_1 = 'AI(Alpha_Beta_1)'
 alpha_agent_2 = 'AI(Alpha_Beta_2)'
+alpha_agent_3 = 'AI(Alpha_Beta_3)'
+alpha_agent_4 = 'AI(Alpha_Beta_4)'
 Minmax_agent_1 = 'AI(MinMax_1)'
 Minmax_agent_2 = 'AI(MinMax_2)'
+Minmax_agent_3 = 'AI(MinMax_3)'
+Minmax_agent_4 = 'AI(MinMax_4)'
 eva_agent = 'AI(Evaluate)'
 # ,Minmax_agent_1
-target_agent_list = [eva_agent,Minmax_agent_1,Minmax_agent_2,alpha_agent_1,alpha_agent_2]
+target_agent_list = [eva_agent,Minmax_agent_1,Minmax_agent_2,alpha_agent_1,alpha_agent_2,alpha_agent_3,alpha_agent_4,Minmax_agent_3,Minmax_agent_4]
 """get csv"""
 file_path= "D:\\Durham\\Project\\code\\Data_collection"
 folder_dir = os.listdir(file_path)
 count = 0
 Minmax_agent_1_csv_list = []
 Minmax_agent_2_csv_list = []
+Minmax_agent_3_csv_list = []
+Minmax_agent_4_csv_list = []
 
 alpha_agent_1_csv_list = []
 alpha_agent_2_csv_list = []
+alpha_agent_3_csv_list = []
+alpha_agent_4_csv_list = []
+
 csv_list = []
 
 for folder in folder_dir:
@@ -34,7 +43,7 @@ for folder in folder_dir:
                 csv_path = file_path + "\\" + folder + "\\" + file + "\\" + folder + "_VS_"+ file
                 # print(csv_path)
                 # target_csv_path = csv_path + "\\" + folder + "_VS_" + file + "_2022-08-1" + "*.csv"
-                target_csv_path_2 = csv_path+"\\"+folder+"_VS_"+eva_agent+"_2022-08-1"+"*.csv"
+                target_csv_path_2 = csv_path+"\\"+folder+"_VS_"+eva_agent+"_2022-08-17"+"*.csv"
 
                 all_csv_name_2 = glob.glob(target_csv_path_2)
 
@@ -44,35 +53,69 @@ for folder in folder_dir:
                         alpha_agent_1_csv_list.append(pd.read_csv(all_csv_name_2[0]))
                     elif folder == alpha_agent_2:
                         alpha_agent_2_csv_list.append(pd.read_csv(all_csv_name_2[0]))
+                    elif folder == alpha_agent_3:
+                        alpha_agent_3_csv_list.append(pd.read_csv(all_csv_name_2[0]))
+                    elif folder == alpha_agent_4:
+                        alpha_agent_4_csv_list.append(pd.read_csv(all_csv_name_2[0]))
                     elif folder == Minmax_agent_1:
                         Minmax_agent_1_csv_list.append(pd.read_csv(all_csv_name_2[0]))
                     elif folder == Minmax_agent_2:
                         Minmax_agent_2_csv_list.append(pd.read_csv(all_csv_name_2[0]))
+                    elif folder == Minmax_agent_3:
+                        Minmax_agent_3_csv_list.append(pd.read_csv(all_csv_name_2[0]))
+                    elif folder == Minmax_agent_4:
+                        Minmax_agent_4_csv_list.append(pd.read_csv(all_csv_name_2[0]))
 
 alpha_agent_2_csv = pd.concat(alpha_agent_2_csv_list)
 alpha_agent_1_csv = pd.concat(alpha_agent_1_csv_list)
+alpha_agent_3_csv = pd.concat(alpha_agent_3_csv_list)
+alpha_agent_4_csv = pd.concat(alpha_agent_4_csv_list)
+
 Minmax_agent_1_csv = pd.concat(Minmax_agent_1_csv_list)
 Minmax_agent_2_csv = pd.concat(Minmax_agent_2_csv_list)
+Minmax_agent_3_csv = pd.concat(Minmax_agent_3_csv_list)
+Minmax_agent_4_csv = pd.concat(Minmax_agent_4_csv_list)
 
 print('ab1\n',alpha_agent_1_csv.head(0),alpha_agent_1_csv.shape,'\n',alpha_agent_1_csv['Winner'].value_counts(1))
 print('m1\n',Minmax_agent_1_csv.head(0),Minmax_agent_1_csv.shape,'\n',Minmax_agent_1_csv['Winner'].value_counts(1))
-
+print('')
 print('ab2\n',alpha_agent_2_csv.head(0),alpha_agent_2_csv.shape,'\n',alpha_agent_2_csv['Winner'].value_counts(1))
 print('m2\n',Minmax_agent_2_csv.head(0),Minmax_agent_2_csv.shape,'\n',Minmax_agent_2_csv['Winner'].value_counts(1))
+print('')
+print('ab3\n',alpha_agent_3_csv.head(0),alpha_agent_3_csv.shape,'\n',alpha_agent_3_csv['Winner'].value_counts(1))
+print('m3\n',Minmax_agent_3_csv.head(0),Minmax_agent_3_csv.shape,'\n',Minmax_agent_3_csv['Winner'].value_counts(1))
+print('')
+print('ab4\n',alpha_agent_4_csv.head(0),alpha_agent_4_csv.shape,'\n',alpha_agent_4_csv['Winner'].value_counts(1))
+print('m4\n',Minmax_agent_4_csv.head(0),Minmax_agent_4_csv.shape,'\n',Minmax_agent_4_csv['Winner'].value_counts(1))
+print('')
 
-y_ab = [alpha_agent_1_csv['Winner'].value_counts(1)[1],alpha_agent_2_csv['Winner'].value_counts(1)[1]]
-y_m = [Minmax_agent_1_csv['Winner'].value_counts(1)[1],Minmax_agent_2_csv['Winner'].value_counts(1)[1]]
-name_list = ['Depth-1','Depth-2']
+y_ab = [alpha_agent_1_csv['Winner'].value_counts(1)[1],alpha_agent_2_csv['Winner'].value_counts(1)[1],alpha_agent_3_csv['Winner'].value_counts(1)[1],alpha_agent_4_csv['Winner'].value_counts(1)[1]]
+y_m = [Minmax_agent_1_csv['Winner'].value_counts(1)[1],Minmax_agent_2_csv['Winner'].value_counts(1)[1],Minmax_agent_3_csv['Winner'].value_counts(1)[1],Minmax_agent_4_csv['Winner'].value_counts(1)[1]]
+name_list = ['Depth-1','Depth-2','Depth-3','Depth-4']
 x = list(range(len(name_list)))
-total_width, n = 0.8, 2
+total_width, n = 0.8, 4
 width = total_width / n
 plt.bar(x, y_ab, width=width, label='alpha_agent', tick_label=name_list)
 for i in range(len(x)):
     x[i] = x[i] + width
 plt.bar(x, y_m, width=width, label='Minmax_agent')
+
 plt.legend()
+plt.ylim(0,1)
+plt.grid(True,linestyle='-.',alpha=0.3)
+plt.minorticks_on()
+plt.ylabel('Winning Rate')
+plt.xlabel('Depth')
+plt.title('Winning Rate Comparison between Alpha-Beta and Minmax')
+plt.savefig('Winning_Rate_Comparison.png')
 plt.show()
 
+# max_time_list = []
+# for i in range(0,alpha_agent_4_csv.shape[0]):
+#     Mcts_time_s = alpha_agent_4_csv.iloc[i]['Move Time']
+#     Mcts_time = json.loads(Mcts_time_s)
+#     max_time_list.append(max(Mcts_time[0]))
+# print(max(max_time_list))
 
 
 

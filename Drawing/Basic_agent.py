@@ -80,22 +80,38 @@ ax1.grid(True,linestyle='-.',color='black',alpha=0.5)
 ax1.set_ylabel('Winning Rate', fontsize=15)
 ax1.set_xlabel('Opposite Agents', fontsize=15)
 ax1.set_title('AI(Roxanne)')
+ax1.text(name_eva[0], data_eva[0]*1.02, '    ('+str(data_eva[0])+') ', ha='center', va='bottom')#, transform=ax1.transAxes
+ax1.text(name_eva[1], data_eva[1]*1.02, '    ('+str(data_eva[1])+') ', ha='center', va='bottom')#, transform=ax1.transAxes
+ax1.text(name_eva[2], data_eva[2]*1.02, '    ('+str(data_eva[2])+') ', ha='center', va='bottom')#, transform=ax1.transAxes
+ax1.text(name_eva[3], data_eva[3]*1.02, '('+str(round(data_eva[3],2))+')       ', ha='center', va='bottom')#, transform=ax1.transAxes
 
 ax2.scatter(name_ran,data_ran,marker='o',c=[ 'red','blue','green','black'])
 # ax2.set_ylim(0,1)
 ax2.grid(True,linestyle='-.',color='black',alpha=0.5)
 ax2.set_title('AI(Random)')
 ax2.set_xlabel('Opposite Agents', fontsize=15)
+ax2.text(name_ran[0], data_ran[0]*1.03, '    ('+str(data_ran[0])+') ', ha='center', va='bottom')#, transform=ax2.transAxes
+ax2.text(name_ran[1], data_ran[1]*1.03, '    ('+str(data_ran[1])+') ', ha='center', va='bottom')#, transform=ax2.transAxes
+ax2.text(name_ran[2], data_ran[2]*1.03, '    ('+str(data_ran[2])+') ', ha='center', va='bottom')#, transform=ax2.transAxes
+ax2.text(name_ran[3], data_ran[3]*1.03, '('+str(round(data_ran[3],2))+')       ', ha='center', va='bottom')#, transform=ax2.transAxes
 
 ax3.scatter(name_scmax,data_scmax,marker='o',c=[ 'red','blue','green','black'])
 ax3.grid(True,linestyle='-.',color='black',alpha=0.5)
 ax3.set_title('AI(Scoremax)')
 ax3.set_xlabel('Opposite Agent', fontsize=15)
+ax3.text(name_scmax[0], data_scmax[0]*1.03, '    ('+str(data_scmax[0])+') ', ha='center', va='bottom')
+ax3.text(name_scmax[1], data_scmax[1]*1.03, '    ('+str(data_scmax[1])+') ', ha='center', va='bottom')
+ax3.text(name_scmax[2], data_scmax[2]*1.03, '    ('+str(data_scmax[2])+') ', ha='center', va='bottom')
+ax3.text(name_scmax[3], data_scmax[3]*1.03, '('+str(round(data_scmax[3],2))+')       ', ha='center', va='bottom')#, transform=ax3.transAxes
 
 ax4.scatter(name_scmin,data_scmin,marker='o',c=[ 'red','blue','green','black'])
 ax4.grid(True,linestyle='-.',color='black',alpha=0.5)
 ax4.set_title('AI(Scoremin)')
 ax4.set_xlabel('Opposite Agents', fontsize=15)
+ax4.text(name_scmin[0], data_scmin[0]*1.03, '    ('+str(data_scmin[0])+') ', ha='center', va='bottom')
+ax4.text(name_scmin[1], data_scmin[1]*1.03, '    ('+str(data_scmin[1])+') ', ha='center', va='bottom')
+ax4.text(name_scmin[2], data_scmin[2]*1.03, '    ('+str(data_scmin[2])+') ', ha='center', va='bottom')
+ax4.text(name_scmin[3], data_scmin[3]*1.03, '('+str(round(data_scmin[3],2))+')       ', ha='center', va='bottom')#, transform=ax4.transAxes
 
 plt.savefig('Basic_Agents_Performance.png')
 plt.show()

@@ -145,18 +145,20 @@ y = list(range(1, len(minimax_5_time[1]) + 1))
 print(y)
 x = minimax_5_time[1]
 plt.plot(y,x,'co-',label='Minimax_5')
+plt.text(y[7],x[7],'(7, 151.596)',fontsize=10,horizontalalignment='left',verticalalignment='bottom')
 
 yy = list(range(1, len(alpha_agent_5_time[1]) + 1))
 print(yy)
 xx = alpha_agent_5_time[1]
 plt.plot(yy,xx,'mo-',label='Alpha_beta_5')
+plt.text(yy[5],xx[5],'(5, 12.68)',fontsize=10,horizontalalignment='left',verticalalignment='baseline')
 
 plt.title('Move Time For Minimax_5 and Alpha_Beta_5')
 plt.xlabel('Move',)
 plt.ylabel('Move time/s')
 plt.legend()
 plt.minorticks_on()
-plt.grid()
+plt.grid(True,linestyle='-.',alpha=0.5)
 # plt.savefig('Move_Time_For_Minimax_5.png')
 plt.savefig('Move_Time_For_Minimax_5_and_Alpha_Beta_5.png')
 plt.show()

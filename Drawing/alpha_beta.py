@@ -19,10 +19,17 @@ target_agent_list = [alpha_agent_1,alpha_agent_2,alpha_agent_3,alpha_agent_4,alp
 file_path= "D:\\Durham\\Project\\code\\Data_collection"
 folder_dir = os.listdir(file_path)
 count = 0
-Eva_csv_list = []
-Ran_csv_list = []
-Scmax_csv_list = []
-Scmin_csv_list = []
+
+alpha_agent_1_csv_list = []
+alpha_agent_2_csv_list = []
+alpha_agent_3_csv_list = []
+alpha_agent_4_csv_list = []
+
+alpha_agent_1_csv_list_4 = []
+alpha_agent_2_csv_list_4 = []
+alpha_agent_3_csv_list_4 = []
+
+
 csv_list = []
 
 for folder in folder_dir:
@@ -33,15 +40,32 @@ for folder in folder_dir:
             # if file is Minmax_agent_4:
                 csv_path = file_path + "\\" + folder + "\\" + file + "\\" + folder + "_VS_"+ file
                 # print(csv_path)
-                target_csv_path = csv_path + "\\" + folder + "_VS_" + file + "_2022-08-1" + "*.csv"
-                # target_csv_path = csv_path + "\\" + folder + "_VS_" + 'AI(MinMax_4)' + "_2022-08-1" + "*.csv"
+                # target_csv_path = csv_path + "\\" + folder + "_VS_" + file + "_2022-08-1" + "*.csv"
+                target_csv_path_5 = csv_path + "\\" + folder + "_VS_" + alpha_agent_5 + "_2022-08-1" + "*.csv"
+                target_csv_path_4=csv_path+"\\"+folder+"_VS_"+alpha_agent_4+"_2022-08-1"+"*.csv"
+
                 # print(target_csv_path)
-                all_csv_name = glob.glob(target_csv_path)
-                print(all_csv_name)
-                if all_csv_name != []:
-                    for csv_name in all_csv_name:
-                        csv_list.append(pd.read_csv(csv_name, index_col=0))
-                    # csv_list.append(pd.read_csv(all_csv_name[0]))
+                all_csv_name_5 = glob.glob(target_csv_path_5)
+                all_csv_name_4=glob.glob(target_csv_path_4)
+                print(all_csv_name_5)
+                print(all_csv_name_4)
+                if all_csv_name_5 != []:
+                    if folder == alpha_agent_1:
+                        alpha_agent_1_csv_list.append(pd.read_csv(all_csv_name_5[0], index_col=0))
+                    elif folder == alpha_agent_2:
+                        alpha_agent_2_csv_list.append(pd.read_csv(all_csv_name_5[0], index_col=0))
+                    elif folder == alpha_agent_3:
+                        alpha_agent_3_csv_list.append(pd.read_csv(all_csv_name_5[0], index_col=0))
+                    elif folder == alpha_agent_4:
+                        alpha_agent_4_csv_list.append(pd.read_csv(all_csv_name_5[0], index_col=0))
+
+                if all_csv_name_4 != []:
+                    if folder == alpha_agent_1:
+                        alpha_agent_1_csv_list_4.append(pd.read_csv(all_csv_name_4[0], index_col=0))
+                    elif folder == alpha_agent_2:
+                        alpha_agent_2_csv_list_4.append(pd.read_csv(all_csv_name_4[0], index_col=0))
+                    elif folder == alpha_agent_3:
+                        alpha_agent_3_csv_list_4.append(pd.read_csv(all_csv_name_4[0], index_col=0))
                 # if count < 3:
                 #     Eva_csv_list.append(pd.read_csv(all_csv_name[0], index_col=0)), index_col=0
                 #     count += 1
@@ -54,6 +78,53 @@ for folder in folder_dir:
                 # elif count < 12:
                 #     Scmin_csv_list.append(pd.read_csv(all_csv_name[0], index_col=0))
                 #     count += 1
+# """ab_5"""
+alpha_agent_1_csv = pd.concat(alpha_agent_1_csv_list)
+alpha_agent_2_csv = pd.concat(alpha_agent_2_csv_list)
+alpha_agent_3_csv = pd.concat(alpha_agent_3_csv_list)
+alpha_agent_4_csv = pd.concat(alpha_agent_4_csv_list)
+
+print('ab1\n',alpha_agent_1_csv.head(0),alpha_agent_1_csv.shape,'\n', alpha_agent_1_csv['Winner'].value_counts(1)[-1])
+print('ab2\n',alpha_agent_2_csv.head(0),alpha_agent_2_csv.shape,'\n', alpha_agent_2_csv['Winner'].value_counts(1)[-1])
+print('ab3\n',alpha_agent_3_csv.head(0),alpha_agent_3_csv.shape,'\n', alpha_agent_3_csv['Winner'].value_counts(1)[-1])
+print('ab4\n',alpha_agent_4_csv.head(0),alpha_agent_4_csv.shape,'\n', alpha_agent_4_csv['Winner'].value_counts(1)[-1])
+
+y = [alpha_agent_1_csv['Winner'].value_counts(1)[-1],alpha_agent_2_csv['Winner'].value_counts(1)[-1],alpha_agent_3_csv['Winner'].value_counts(1)[-1],alpha_agent_4_csv['Winner'].value_counts(1)[-1]]
+x = [alpha_agent_1,alpha_agent_2,alpha_agent_3,alpha_agent_4]
+
+plt.bar(x,y,width=0.5, color='blue')
+plt.xlabel('Opposite Agents')
+plt.ylabel('Winning Rate')
+plt.title('Winning Rate of Alpha_beta_5 Agent')
+plt.ylim(0,1)
+plt.grid(True,linestyle='-.',alpha=0.3)
+plt.minorticks_on()
+plt.savefig('ab_5.png')
+plt.show()
+
+"""ab_4"""
+alpha_agent_1_csv_4 = pd.concat(alpha_agent_1_csv_list_4)
+alpha_agent_2_csv_4 = pd.concat(alpha_agent_2_csv_list_4)
+alpha_agent_3_csv_4 = pd.concat(alpha_agent_3_csv_list_4)
+
+print('ab1\n',alpha_agent_1_csv_4.head(0),alpha_agent_1_csv_4.shape,'\n', alpha_agent_1_csv_4['Winner'].value_counts(1)[-1])
+print('ab2\n',alpha_agent_2_csv_4.head(0),alpha_agent_2_csv_4.shape,'\n', alpha_agent_2_csv_4['Winner'].value_counts(1)[-1])
+print('ab3\n',alpha_agent_3_csv_4.head(0),alpha_agent_3_csv_4.shape,'\n', alpha_agent_3_csv_4['Winner'].value_counts(1)[-1])
+print('ab4\n',alpha_agent_4_csv.head(0),alpha_agent_4_csv.shape,'\n', alpha_agent_4_csv['Winner'].value_counts(1)[1])
+
+y = [alpha_agent_1_csv_4['Winner'].value_counts(1)[-1],alpha_agent_2_csv_4['Winner'].value_counts(1)[-1],alpha_agent_3_csv_4['Winner'].value_counts(1)[-1],alpha_agent_4_csv['Winner'].value_counts(1)[1]]
+x = [alpha_agent_1,alpha_agent_2,alpha_agent_3,alpha_agent_5]
+
+plt.bar(x,y,width=0.5, color='orange')
+plt.xlabel('Opposite Agents')
+plt.ylabel('Winning Rate')
+plt.title('Winning Rate of Alpha_beta_4 Agent')
+plt.ylim(0,1)
+plt.grid(True,linestyle='-.',alpha=0.3)
+plt.minorticks_on()
+plt.savefig('ab_4.png')
+plt.show()
+
 
 # print(Eva_csv_list)
 # print("")

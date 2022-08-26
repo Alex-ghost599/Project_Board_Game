@@ -16,13 +16,13 @@ BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 sys.path.append(BASE_DIR)
 
 BOARD_SIZE = 8
-N_STATE = pow(BOARD_SIZE, 2)        # 1*64，表示棋盘
-N_ACTION = pow(BOARD_SIZE, 2) + 1   # 1*65，表示动作（包括没有可下的位置）
+N_STATE = pow(BOARD_SIZE, 2)        # 1*64，board_size
+N_ACTION = pow(BOARD_SIZE, 2) + 1   # 1*65，board_size+1 the move which include the not move 64
 
 LR = 0.001
 EPISODE = 40000
 BATCH_SIZE = 32
-GAMMA = 0.9
+GAMMA = 0.5
 ALPHA = 0.9
 TRANSITIONS_CAPACITY = 200
 UPDATE_DELAY = 10
@@ -45,11 +45,11 @@ print('device:', device)
 
 
 class NET(nn.Module):
-    """定义网络结构
+    """artificial neural network
 
     Returns:
-        x [tensor] -- (batch, N_ACTION)，每一行表示各个action的分数
-    """
+        x [tensor] -- (batch, N_ACTION)，score for each moves in each line
+"""
 
     def __init__(self):
         super(NET, self).__init__()
@@ -61,8 +61,8 @@ class NET(nn.Module):
         # self.linear1.weight.data.normal_(0, 0.1)
 
         self.conv1 = nn.Sequential(
-            nn.Conv1d(1, 4, 3, 1, 1),   # in_channel=1, out_channel=4, kernel_size卷积核大小=3, stride步长=1, padding=1
-            nn.LeakyReLU(inplace=True)  # inplace=true，输出数据会覆盖输入数据，再求梯度时不可用。
+            nn.Conv1d(1, 4, 3, 1, 1),   # in_channel=1, out_channel=4, kernel_size=3, stride=1, padding=1
+            nn.LeakyReLU(inplace=True)  # inplace=true，output will overwrite the input
         )
 
         self.conv2 = nn.Sequential(
@@ -110,7 +110,7 @@ class NET(nn.Module):
 
     def forward(self, x):
         x = self.linear1(x)
-        x = x.view(x.shape[0], 1, -1)   # 将多行tensor拼接成一行
+        x = x.view(x.shape[0], 1, -1)   # put tensor as one dimension
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
@@ -136,11 +136,10 @@ class NET(nn.Module):
 class DQN(object):
     def __init__(self, color):
         """
-        color: 1表示先手；-1表示后手
+        color: 1 as black；-1 white
 
-        transitions : 存储状态的空间，格式为(state, action, reward, state_), state_为后继状态
-        transitions_index : 记录当前使用存储空间的索引
-        learn_iter : 当到达UPDATE_ITERS时，就更新预测网络 Q_ ，把Q的参数复制给它
+        transitions : state as (state, action, reward, state_), state_ is next state
+        learn_iter : when it is UPDATE_ITERS，updata Q_ ，give the parameter of Q
         """
         self.transitions = np.zeros((TRANSITIONS_CAPACITY, 2 * N_STATE + 2))
         self.transitions_index = 0
@@ -150,27 +149,24 @@ class DQN(object):
         # ??
         if color == 1:
             # pass
-            # self.Q.load_state_dict(torch.load('data/216000_dueling_offensive.pth', map_location='cpu'))
             self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\model_offensive.pth'))
         elif color == -1:
             # pass
-            # self.Q.load_state_dict(torch.load('data/216000_dueling_defensive.pth', map_location='cpu'))
             self.Q.load_state_dict(torch.load('D:\\Durham\\Project\\code\\AI\\DQN\\model_defensive.pth'))
 
         self.optimizer = torch.optim.Adam(self.Q.parameters(), lr=LR)
         self.criteria = nn.MSELoss().to(device)
 
-    def Choose_Action_EpsilonGreedy(self, x, game_state, color, Epsilon=0.2):
-        """ε-greedy算法选择下一个action。以ε概率随机选择一个action，否则就选择Q值最大的action
+    def Choose_Action_EpsilonGreedy(self, x, game_state, color, Epsilon=0.1):
+        """ε-greedy choose a action. has ε probability to choose a random action
 
         Arguments:
-            x [tensor] -- NET网络的输入值，即当前状态，在Q-Learning中，选择下一个动作应该是查表得到的，
-                            在DQN中没有这个表，所以要先经过Q网络得到一个状态的Q值，然后选择这向量里概率最大的action
-            game_state [class] -- 当前的游戏状态
-            color int -- 1表示黑棋，-1表示白棋
+            x [tensor] -- input， to get Q value for next move
+            game_state [class] -- current game state
+            color int -- 1 black，-1 white
 
         Returns:
-            action [int] -- 0~64中的一个数，表示下棋的位置；64表示跳过
+            action [int] -- 0~64，the action of next move
         """
 
         if color == 1:
@@ -178,23 +174,23 @@ class DQN(object):
         elif color == -1:
             availiable_pos = game_state.get_possible_moves('white')
 
-        availiable_pos = list(map(lambda a: 8 * a[0] + a[1], availiable_pos))  # 列表,表明合法位置
+        availiable_pos = list(map(lambda a: 8 * a[0] + a[1], availiable_pos))
         if len(availiable_pos) == 0:
             return 64  # 表示这一步只能跳过
 
         if np.random.uniform() < Epsilon:  # random choose an action
-            action = np.random.choice(availiable_pos, 1)[0]      # 从available_pos里面抽取1个数字，并返回数组
+            action = np.random.choice(availiable_pos, 1)[0]
         else:  # choose the max Q-value action
             x = torch.tensor(x, dtype=torch.float).to(device)
             # print(x.shape)
             # print(x)
             x = x.view(1, -1)
             # print(x)
-            actions_values = self.Q(x)[0]  # 65维tensor，各个action在各个位置的值（1*65维，经过NET的结果）
+            actions_values = self.Q(x)[0]
             # print(actions_values)
 
-            # avai_actions = torch.tensor(actions_values[availiable_pos])   # actions_values是各个action的得分
-            avai_actions = actions_values[availiable_pos].clone().detach().to(device)  # actions_values是各个action的得分
+            # avai_actions = torch.tensor(actions_values[availiable_pos])
+            avai_actions = actions_values[availiable_pos].clone().detach().to(device)  # actions_values is score for each action
             # print(avai_actions)
 
             _, action_ind = torch.max(avai_actions, 0)
@@ -206,23 +202,23 @@ class DQN(object):
         """把一组转移属性存储到transitions中
 
         Arguments:
-            s {[type]} -- 当前状态
-            a {[type]} -- 选择的动作
-            r {[type]} -- reward值
-            s_ {[type]} -- 后继状态
+            s {[type]} -- current state
+            a {[type]} -- action
+            r {[type]} -- reward
+            s_ {[type]} -- next state
         """
-        transition = np.hstack((s, a, r, s_))   # 拼接在一起
+        transition = np.hstack((s, a, r, s_))
         self.transitions[self.transitions_index % TRANSITIONS_CAPACITY] = transition
         self.transitions_index += 1
 
     def Learn(self, oppo_Q_):
         for step in range(10):
-            if self.learn_iter % UPDATE_DELAY == 0:  # update parameters of Q_ 每隔一段时间将Q的参数直接给到Q_
+            if self.learn_iter % UPDATE_DELAY == 0:  # update parameters of Q_
                 self.Q_.load_state_dict(self.Q.state_dict())
             self.learn_iter += 1
 
             sample_index = np.random.choice(TRANSITIONS_CAPACITY,
-                                            BATCH_SIZE)  # randomly choose BATCH_SIZE samples to learn 从经验池中随机选取进行训练，是数组
+                                            BATCH_SIZE)  # randomly choose BATCH_SIZE samples to learn
             batch_tran = self.transitions[sample_index, :]
             batch_s = batch_tran[:, :N_STATE]
             batch_a = batch_tran[:, N_STATE: N_STATE + 1]
@@ -234,11 +230,11 @@ class DQN(object):
             batch_a = torch.tensor(batch_a, dtype=int).to(device)
             batch_r = torch.tensor(batch_r, dtype=torch.float).to(device)
 
-            # gather函数
+            # gather
             batch_y = self.Q(batch_s).gather(1,
-                                             batch_a)  # gather figure out which action actually is chosen 相当于从第一维取第batch_a位置的值
+                                             batch_a)  # gather figure out which action actually is chosen
             batch_y_ = oppo_Q_(
-                batch_s_).detach()  # detach return a new Variable which do not have gradient detach就是禁止梯度更新，这些图变量包含了梯度，在计算loss的时候会更新，因为Q_不用更新，因此禁止梯度。
+                batch_s_).detach()  # detach return a new Variable which do not have gradient detach
             batch_y_ = ALPHA * (batch_r + GAMMA * torch.max(batch_y_, 1)[0].view(-1,
                                                                         1))  # max(1) return (value,index) for each row
 
@@ -296,18 +292,17 @@ if __name__ == "__main__":
             # black
             # print(round_)
             round_ += 1
-            # game_state.Display()    # 输出棋盘
             s = game_state.Get_State()
             a = offensive.Choose_Action_EpsilonGreedy(s, game_state, 1)
             game_state.Move(a,'black')
             r = game_state.reward()
             s_ = game_state.Get_State()
 
-            offensive.Store_transition(s, a, r, s_)   # 先后手的经验池分开存
+            offensive.Store_transition(s, a, r, s_)
             # defensive.Store_transition(s, a, -r, s_)
 
-            if r == 100 or r == -100 or game_state.gameover():  # 当这局游戏结束或双方下够了100次。经验池已经有很多样本，此时可以开始训练
-                offensive.Learn(defensive.Q_) # 用对手的Q_网络来计算下一个状态
+            if r == 100 or r == -100 or game_state.gameover():
+                offensive.Learn(defensive.Q_)
                 print('Episode:{} | Reward:{}'.format(episode, r))
                 break
 
@@ -320,10 +315,10 @@ if __name__ == "__main__":
             s_ = game_state.Get_State()
 
             # offensive.Store_transition(s, a, r, s_)
-            defensive.Store_transition(s, a, -r, s_) # 先后手的经验池分开存
+            defensive.Store_transition(s, a, -r, s_)
 
             if r == 100 or r == -100 or game_state.gameover():
-                defensive.Learn(offensive.Q_) # 用对手的Q_网络来计算下一个状态
+                defensive.Learn(offensive.Q_)
                 print('Episode:{} | Reward:{}'.format(episode, r))
                 break
 
